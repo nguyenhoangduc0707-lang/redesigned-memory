@@ -1,0 +1,41 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# ENV
+.env
+
+# Logs
+*.log
+
+# Audit
+AUDIT/
+audit.txt
+requirements_audit.txt
+full_test.txt
+kernel_test.txt
+netstat_full.txt
+ports.txt
+tasks.txt
+structure.txt
+full_source_dump.txt
+
+# URLACL
+urlacl_backup.txt
+urlacl_backup_*.txt
+remove_urlacl_log_*.txt
+
+# Cache
+.pytest_cache/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# VSCode
+.vscode/
+
+# Runtime temp
+*.db
+*.sqlite
