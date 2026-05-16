@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head><title>New Campaign</title></head>
+<body>
+    <h2>Create New Campaign</h2>
+    <form method="post">
+        Name: <input type="text" name="name" required><br>
+        Platform: 
+        <select name="platform">
+            <option>tiktok</option><option>facebook</option><option>shopee</option>
+            <option>lazada</option><option>zalo</option><option>alibaba</option>
+        </select><br>
+        Start Date: <input type="date" name="start_date"><br>
+        End Date: <input type="date" name="end_date"><br>
+        Budget (VND): <input type="number" name="budget" step="1000" required><br>
+        Goal: 
+        <select name="goal">
+            <option>engagement</option><option>sales</option><option>reach</option>
+        </select><br>
+        Products: <br>
+        {% for p in products %}
+            <input type="checkbox" name="product_ids" value="{{ p[0] }}"> {{ p[1] }} ({{ p[2] }} VND)<br>
+        {% endfor %}
+        <button type="submit">Create Campaign</button>
+    </form>
+    <a href="/campaigns">Back</a>
+</body>
+</html>

@@ -1,0 +1,45 @@
+# CÁC MODULE CẦN CÓ ĐỂ TỰ ĐỘNG HÓA AFFILIATE
+
+## 1. Worker đăng bài Facebook
+- File: `worker/fb_worker.py`
+- Yêu cầu: Dùng Facebook Graph API hoặc Playwright (sandbox) để đăng bài, kèm ảnh/link.
+- Phải kế thừa `BaseWorker`, có cơ chế lấy token từ registry, retry, và push kết quả lên event bus.
+
+## 2. Worker đăng bài TikTok (nếu dùng TikTok Shop)
+- File: `worker/tiktok_worker.py`
+- Yêu cầu: Sử dụng Apify hoặc TikTok API. Hiện tại Apify đã có token nhưng chưa tích hợp đăng bài.
+
+## 3. Worker đăng bài Zalo
+- File: `worker/zalo_worker.py`
+- Yêu cầu: Dùng Zalo OA API (cần token). Code hiện có trong `agents.py` nhưng chưa tách thành worker.
+
+## 4. Worker đăng bài Shopee/Lazada (nếu cần)
+- File: `worker/shopee_worker.py`, `worker/lazada_worker.py`
+- Yêu cầu: Dùng affiliate API (có thể qua Involve Asia). Hiện tại chỉ có mock.
+
+## 5. FastAPI Gateway để nhận lệnh từ UI
+- File: `gateway/main.py`
+- Yêu cầu: Các endpoint:
+  - `POST /post/facebook` (body: {content, image_url, campaign_id})
+  - `POST /post/tiktok`
+  - `GET /status/{task_id}`
+  - `POST /campaign/run/{campaign_id}` (chạy toàn bộ chiến dịch)
+
+## 6. Task Queue (Redis hoặc SQLite)
+- File: `queue/task_queue.py`
+- Yêu cầu: Lưu các task đăng bài, worker pool sẽ lấy và xử lý.
+
+## 7. Cập nhật `worker/pool.py` để đăng ký các worker mới
+- Hiện tại pool chưa có. Cần tạo class WorkerPool quản lý các worker.
+
+## 8. Tích hợp với Campaign Manager hiện có
+- Khi một campaign được tạo, tự động sinh các task đăng bài vào queue.
+- Sau khi đăng, cập nhật bảng `posts` và `campaign_results`.
+
+## 9. Script test tự động gửi lệnh qua Gateway
+- File: `test_gateway.py`
+- Dùng để kiểm tra luồng: UI -> Gateway -> Queue -> Worker -> Đăng bài thành công.
+
+## 10. Tài liệu hướng dẫn triển khai
+- File: `AUTOMATION_DEPLOY.md`
+- Hướng dẫn cài đặt, cấu hình token, chạy gateway, worker, và kiểm tra.

@@ -1,0 +1,14 @@
+﻿<!DOCTYPE html>
+<html>
+<head><title>Dashboard</title></head>
+<body>
+    <h1>Chao {{ session.user }} ({{ role }})</h1>
+    <a href="/campaigns">Campaign Manager</a> | <a href="/logout">Logout</a>
+    <h2>Kho bai dang</h2>
+    <ul>
+    {% for platform, count in counts.items() %}
+        <li><a href="/posts/{{ platform }}">{{ platform.upper() }} ({{ count }})</a></li>
+    {% endfor %}
+    </ul>
+</body>
+</html>

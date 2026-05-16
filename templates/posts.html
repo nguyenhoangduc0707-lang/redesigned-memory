@@ -1,0 +1,21 @@
+﻿<!DOCTYPE html>
+<html>
+<head><title>Posts for {{ platform }}</title></head>
+<body>
+    <h2>Posts for {{ platform.upper() }}</h2>
+    <a href="/dashboard">Back</a>
+    <ul>
+        {% for post in posts %}
+        <li>
+            <p>{{ post.caption }}</p>
+            <small>Link: {{ post.link }}</small>
+            <form method="post" action="/post_to_fb">
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <input type="hidden" name="platform" value="{{ platform }}">
+                <button type="submit">Post to Facebook</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

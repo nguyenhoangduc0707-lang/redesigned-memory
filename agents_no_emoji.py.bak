@@ -1,0 +1,60 @@
+import os
+import requests
+import json
+import re
+from database import save_products
+from dotenv import load_dotenv
+
+load_dotenv()
+
+class BaseAgent:
+    platform = "unknown"
+    def fetch(self):
+        return []
+
+class ShopeeAgent(BaseAgent):
+    platform = "shopee"
+    def fetch(self, limit=5):
+        # Mock data
+        return [{"name": "Ao thun nam (mock)", "price": 129000, "commission": 8, "url": "#", "strategy": "M1"}]
+
+class LazadaAgent(BaseAgent):
+    platform = "lazada"
+    def fetch(self, limit=5):
+        return [{"name": "Tai nghe Bluetooth (mock)", "price": 399000, "commission": 6, "url": "#", "strategy": "M2"}]
+
+class TikTokAgent(BaseAgent):
+    platform = "tiktok"
+    def fetch(self, limit=5):
+        return [{"name": "Mat na duong da (mock)", "price": 299000, "commission": 10, "url": "#", "strategy": "M2"}]
+
+class FacebookAgent(BaseAgent):
+    platform = "facebook"
+    def fetch(self, limit=5):
+        return [{"name": "Khoa hoc affiliate (mock)", "price": 499000, "commission": 25, "url": "#", "strategy": "M3"}]
+
+class ZaloAgent(BaseAgent):
+    platform = "zalo"
+    def fetch(self, limit=5):
+        return [{"name": "Sua tam trang da (mock)", "price": 89000, "commission": 7, "url": "#", "strategy": "M1"}]
+
+class AlibabaAgent(BaseAgent):
+    platform = "alibaba"
+    def fetch(self, limit=5):
+        return [{"name": "Loa bluetooth (mock)", "price": 250000, "commission": 18, "url": "#", "strategy": "M2"}]
+
+def run_all_agents():
+    agents = [ShopeeAgent(), LazadaAgent(), TikTokAgent(), FacebookAgent(), ZaloAgent(), AlibabaAgent()]
+    all_products = []
+    for agent in agents:
+        products = agent.fetch()
+        if products:
+            for p in products:
+                p['platform'] = agent.platform
+            all_products.extend(products)
+            print(f"[OK] {agent.platform}: {len(products)} san pham")
+        else:
+            print(f"[WARN] {agent.platform}: khong co san pham")
+    save_products(all_products)
+    print(f"[INFO] Tong {len(all_products)} san pham da luu vao database")
+    return all_products
