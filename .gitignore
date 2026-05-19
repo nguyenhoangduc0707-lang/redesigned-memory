@@ -4,16 +4,19 @@
 __pycache__/
 *.pyc
 
-# ENV
+# ENV & secrets
 .env
 .env.vault
 keys.vault.json
+*.key
+*.pem
+*.p12
 
 # Logs
 *.log
 reports/
 
-# Audit
+# Audit & reports (chứa thông tin nhạy cảm)
 AUDIT/
 audit.txt
 requirements_audit.txt
@@ -24,43 +27,69 @@ ports.txt
 tasks.txt
 structure.txt
 full_source_dump.txt
-
-# URLACL
-urlacl_backup.txt
-urlacl_backup_*.txt
-remove_urlacl_log_*.txt
-
-# Cache
-.pytest_cache/
-
-# OS
-Thumbs.db
-.DS_Store
-
-# VSCode
-.vscode/
-
-# Runtime temp
-*.db
-*.sqlite
-
-# Additional secrets
-*.key
-*.pem
-*.p12
-
-# Local database files (đã có *.db rồi, nhưng thêm tên cụ thể nếu cần)
-ai_os.db
-affiliate.db
-
-# PowerShell scripts (nếu không muốn commit chúng – tuỳ bạn)
-*.ps1
-
-# Audit files (chứa thông tin nhạy cảm)
 API_KEYS_FOUND.txt
 API_KEY_AUDIT.md
 FINAL_REPORT.md
 REPORT.md
-*.csv
 project_snapshot.txt
-*.log
+*.csv
+
+# URLACL backups
+urlacl_backup.txt
+urlacl_backup_*.txt
+remove_urlacl_log_*.txt
+
+# Cache & temp
+.pytest_cache/
+*.pyc
+
+# OS & IDE
+Thumbs.db
+.DS_Store
+.vscode/
+.idea/
+
+# Runtime databases (local)
+*.db
+*.sqlite
+*.sqlite3
+ai_os.db
+affiliate.db
+
+# Binary & large model files
+*.exe
+*.zip
+*.winmd
+*.pkl
+*.joblib
+*.h5
+*.onnx
+*.pb
+
+# History & temporary command logs
+.cmd_history
+.sen_history
+*.history
+
+# PowerShell scripts (không commit lên repo)
+*.ps1
+
+# Media / audio (thư mục tạm)
+audio/
+dockerun-host/
+
+# Docker related (chỉ giữ Dockerfile, không giữ .exe, .zip)
+Dockerfile.txt  # nên đặt tên là Dockerfile, nếu là txt thì ignore
+*.dockerignore  # có thể commit nếu cần, nhưng thường không
+
+# Jupyter notebook (nếu không muốn commit)
+*.ipynb
+
+# Model folder (nếu chứa file lớn)
+models/*.pkl
+models/*.joblib
+
+# Extra script files không cần commit
+daily_report.bat
+*.bat
+*.com
