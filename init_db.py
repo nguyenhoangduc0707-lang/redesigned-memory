@@ -1,72 +1,44 @@
-# init_db.py
-import sqlite3
-from datetime import datetime, timedelta
+#!/usr/bin/env python3
+"""
+Khởi tạo database cho CI.
+Tự động phát hiện và gọi hàm init_db từ src.database nếu có.
+"""
 
-conn = sqlite3.connect('ai_os.db')
-c = conn.cursor()
+import sys
+import os
+import importlib
 
-# Tạo bảng campaigns
-c.execute('''
-    CREATE TABLE IF NOT EXISTS campaigns (
-        id INTEGER PRIMARY KEY,
-        name TEXT,
-        status TEXT
-    )
-''')
+def main():
+    # Thêm thư mục gốc vào path để import src
+    sys.path.insert(0, os.getcwd())
+    
+    # Thử import module database
+    try:
+        db_module = importlib.import_module("src.database")
+        if hasattr(db_module, "init_db"):
+            print("📦 Gọi src.database.init_db()...")
+            db_module.init_db()
+        elif hasattr(db_module, "create_tables"):
+            print("📦 Gọi src.database.create_tables()...")
+            db_module.create_tables()
+        else:
+            print("⚠️ Không tìm thấy hàm init_db hoặc create_tables trong src.database")
+            fallback_init()
+    except ImportError:
+        print("⚠️ Không thể import src.database, dùng fallback init...")
+        fallback_init()
 
-# Tạo bảng campaign_metrics
-c.execute('''
-    CREATE TABLE IF NOT EXISTS campaign_metrics (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        campaign_id INTEGER,
-        platform TEXT,
-        impressions INTEGER,
-        clicks INTEGER,
-        conversions INTEGER,
-        revenue REAL,
-        timestamp DATETIME
-    )
-''')
+def fallback_init():
+    """Tạo bảng tối thiểu nếu không có database module"""
+    import sqlite3
+    conn = sqlite3.connect("ai_os.db")
+    cursor = conn.cursor()
+    # Tạo các bảng cơ bản (bạn có thể bổ sung theo nhu cầu test)
+    cursor.execute("CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, name TEXT)")
+    cursor.execute("CREATE TABLE IF NOT EXISTS campaigns (id INTEGER PRIMARY KEY, name TEXT)")
+    conn.commit()
+    conn.close()
+    print("✅ Fallback database created with basic tables.")
 
-# Tạo bảng campaign_variants
-c.execute('''
-    CREATE TABLE IF NOT EXISTS campaign_variants (
-        campaign_id INTEGER,
-        variant_name TEXT,
-        title TEXT,
-        conversions INTEGER,
-        impressions INTEGER
-    )
-''')
-
-# Tạo bảng affiliate_clicks
-c.execute('''
-    CREATE TABLE IF NOT EXISTS affiliate_clicks (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        click_id TEXT UNIQUE,
-        campaign_id INTEGER,
-        product_id INTEGER,
-        user_ip TEXT,
-        timestamp DATETIME,
-        converted INTEGER DEFAULT 0
-    )
-''')
-
-# Chèn dữ liệu mẫu
-c.execute('INSERT OR IGNORE INTO campaigns VALUES (1, "Campaign A", "active")')
-c.execute('INSERT OR IGNORE INTO campaigns VALUES (2, "Campaign B", "draft")')
-
-yesterday = (datetime.now() - timedelta(days=1)).strftime('%Y-%m-%d 00:00:00')
-c.execute('INSERT INTO campaign_metrics (campaign_id, platform, impressions, clicks, conversions, revenue, timestamp) VALUES (?,?,?,?,?,?,?)',
-          (1, 'Facebook', 1200, 60, 6, 300.0, yesterday))
-c.execute('INSERT INTO campaign_metrics (campaign_id, platform, impressions, clicks, conversions, revenue, timestamp) VALUES (?,?,?,?,?,?,?)',
-          (1, 'TikTok', 900, 40, 4, 200.0, yesterday))
-c.execute('INSERT INTO campaign_metrics (campaign_id, platform, impressions, clicks, conversions, revenue, timestamp) VALUES (?,?,?,?,?,?,?)',
-          (2, 'Zalo', 500, 25, 2, 100.0, yesterday))
-
-c.execute('INSERT INTO campaign_variants (campaign_id, variant_name, title, conversions, impressions) VALUES (1, "A", "Giảm 20%", 10, 1000)')
-c.execute('INSERT INTO campaign_variants (campaign_id, variant_name, title, conversions, impressions) VALUES (1, "B", "Miễn phí ship", 15, 1200)')
-
-conn.commit()
-conn.close()
-print('Database initialized with sample data')
+if __name__ == "__main__":
+    main()
