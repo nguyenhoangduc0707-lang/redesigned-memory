@@ -92,4 +92,4 @@ models/*.joblib
 # Extra script files không cần commit
 daily_report.bat
 *.bat
-*.com
+*.com*.exe
