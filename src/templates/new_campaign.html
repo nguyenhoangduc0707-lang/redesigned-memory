@@ -1,0 +1,41 @@
+﻿{% extends "base.html" %}
+{% block title %}Tạo chiến dịch{% endblock %}
+{% block content %}
+<h2>Tạo chiến dịch mới</h2>
+<form method="post">
+    <div class="mb-3">
+        <label>Tên chiến dịch</label>
+        <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Platform</label>
+        <select name="platform" class="form-control">
+            <option>facebook</option><option>tiktok</option><option>zalo</option><option>shopee</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label>Ngày bắt đầu</label>
+        <input type="date" name="start_date" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Ngày kết thúc</label>
+        <input type="date" name="end_date" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Ngân sách (VNĐ)</label>
+        <input type="number" step="any" name="budget" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Mục tiêu</label>
+        <input type="text" name="goal" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label>Sản phẩm</label><br>
+        {% for p in products %}
+        <input type="checkbox" name="product_ids" value="{{ p[0] }}"> {{ p[1] }} ({{ p[2] }} VND)<br>
+        {% endfor %}
+    </div>
+    <button type="submit" class="btn btn-primary">Tạo</button>
+    <a href="{{ url_for('list_campaigns') }}" class="btn btn-secondary">Hủy</a>
+</form>
+{% endblock %}

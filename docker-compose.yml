@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    container_name: ai_os_kernel
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data          # lưu database
+      - ./audio:/app/audio
+      - ./logs:/app/logs
+      - ./error_logs:/app/error_logs
+    environment:
+      - FLASK_SECRET_KEY=${FLASK_SECRET_KEY}
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_PATH=/app/data/affiliate.db   # ghi đè đường dẫn db vào volume
+      - FACEBOOK_ACCESS_TOKEN=${FACEBOOK_ACCESS_TOKEN}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    env_file:
+      - .env
+    restart: unless-stopped

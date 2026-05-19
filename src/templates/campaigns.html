@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+{% block title %}Chiến dịch{% endblock %}
+{% block content %}
+<h2>Quản lý chiến dịch</h2>
+<a href="{{ url_for('new_campaign') }}" class="btn btn-primary mb-3">➕ Tạo chiến dịch</a>
+<div class="table-responsive">
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th><th>Tên</th><th>Platform</th><th>Ngân sách</th><th>Trạng thái</th><th>Thao tác</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in campaigns %}
+            <tr>
+                <td>{{ c[0] }}</td>
+                <td>{{ c[1] }}</td>
+                <td>{{ c[2] }}</td>
+                <td>{{ c[6] }}</td>
+                <td>{{ c[7] }}</td>
+                <td>
+                    <a href="{{ url_for('show_prediction', campaign_id=c[0]) }}" class="btn btn-sm btn-info">Dự đoán</a>
+                    {% if current_user.role == 'admin' %}
+                    <form method="post" action="{{ url_for('evaluate_campaign', campaign_id=c[0]) }}" style="display:inline;">
+                        <input type="number" name="actual_posts" placeholder="Bài đăng" size="4" required>
+                        <input type="number" name="actual_likes" placeholder="Likes" size="4" required>
+                        <input type="number" name="actual_sales" placeholder="Sales" size="4" required>
+                        <input type="number" name="actual_revenue" placeholder="Revenue" step="any" size="6" required>
+                        <button type="submit" class="btn btn-sm btn-warning">Đánh giá</button>
+                    </form>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

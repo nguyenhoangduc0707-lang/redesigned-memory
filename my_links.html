@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Quản lý link Affiliate</h1>
+    <p>Vai trò: {{ role }} | Số link còn lại trong ngày: <strong id="dailyLeft">{{ daily_left }}</strong></p>
+
+    <div class="card mt-3">
+        <div class="card-header">Tạo link mới</div>
+        <div class="card-body">
+            <div class="form-group">
+                <label>URL sản phẩm (target)</label>
+                <input type="url" id="target_url" class="form-control" placeholder="https://shopee.vn/...">
+            </div>
+            <button class="btn btn-primary" onclick="createLink()">Tạo link rút gọn</button>
+            <div id="result" class="mt-2"></div>
+        </div>
+    </div>
+
+    <div class="card mt-3">
+        <div class="card-header">Danh sách link của bạn</div>
+        <div class="card-body">
+            {% if links %}
+            <table class="table table-striped">
+                <thead>
+                    <tr><th>Link code</th><th>URL đích</th><th>Lượt click</th><th>Ngày tạo</th><th>Link affiliate</th></tr>
+                </thead>
+                <tbody>
+                    {% for link in links %}
+                    <tr>
+                        <td>{{ link[0] }}</td>
+                        <td>{{ link[1][:50] }}{% if link[1]|length > 50 %}...{% endif %}</td>
+                        <td>{{ link[2] }}</td>
+                        <td>{{ link[3] }}</td>
+                        <td><a href="/go/{{ link[0] }}" target="_blank">Mở link</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>Chưa có link nào.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+async function createLink() {
+    const target = document.getElementById('target_url').value;
+    if (!target) {
+        alert('Vui lòng nhập URL sản phẩm');
+        return;
+    }
+    const response = await fetch('/api/create_link', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({target_url: target})
+    });
+    const data = await response.json();
+    if (data.error) {
+        if (data.error.includes('hết lượt')) {
+            // Hết lượt, yêu cầu xem quảng cáo
+            const adResp = await fetch('/api/need_ad');
+            const adData = await adResp.json();
+            if (adData.ad) {
+                if (confirm('Bạn đã hết lượt tạo link hôm nay. Xem quảng cáo để nhận thêm lượt?')) {
+                    window.open(adData.ad.destination_url, '_blank');
+                    // Giả lập xem xong sau 5 giây (thực tế nên gọi webhook)
+                    setTimeout(async () => {
+                        const watchResp = await fetch('/api/watch_ad', {
+                            method: 'POST',
+                            headers: {'Content-Type': 'application/json'},
+                            body: JSON.stringify({ad_id: adData.ad.id})
+                        });
+                        const watchData = await watchResp.json();
+                        alert(watchData.message);
+                        location.reload();
+                    }, 5000);
+                }
+            } else {
+                alert('Không có quảng cáo nào để xem. Hãy quay lại vào ngày mai.');
+            }
+        } else {
+            alert('Lỗi: ' + data.error);
+        }
+    } else {
+        document.getElementById('result').innerHTML = `<div class="alert alert-success">Link tạo thành công: <a href="${data.link}" target="_blank">${data.link}</a></div>`;
+        setTimeout(() => location.reload(), 2000);
+    }
+}
+</script>
+{% endblock %}

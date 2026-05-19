@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-section">
+  <h1>NotebookLM Pro</h1>
+  <div id="notebook-status">Checking...</div>
+  <form id="notebook-form">
+    <textarea id="question" name="question" rows="5" placeholder="Ask about AI_OS_KERNEL_V3"></textarea>
+    <button type="submit">Ask</button>
+  </form>
+  <pre id="answer"></pre>
+</section>
+<script>
+const statusEl = document.getElementById("notebook-status");
+const answerEl = document.getElementById("answer");
+
+fetch("/api/notebooklm/status")
+  .then((response) => response.json())
+  .then((data) => {
+    statusEl.textContent = data.cli_available && data.configured
+      ? "NotebookLM CLI ready"
+      : "Local export fallback ready";
+  })
+  .catch(() => {
+    statusEl.textContent = "Status unavailable";
+  });
+
+document.getElementById("notebook-form").addEventListener("submit", async (event) => {
+  event.preventDefault();
+  answerEl.textContent = "Loading...";
+  const question = document.getElementById("question").value;
+  const response = await fetch("/api/notebooklm/ask", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({question})
+  });
+  const data = await response.json();
+  answerEl.textContent = data.answer || data.error || "No answer";
+});
+</script>
+{% endblock %}

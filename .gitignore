@@ -1,13 +1,17 @@
 # Python
 .venv/
+.venv_aios/
 __pycache__/
 *.pyc
 
 # ENV
 .env
+.env.vault
+keys.vault.json
 
 # Logs
 *.log
+reports/
 
 # Audit
 AUDIT/
@@ -39,3 +43,24 @@ Thumbs.db
 # Runtime temp
 *.db
 *.sqlite
+
+# Additional secrets
+*.key
+*.pem
+*.p12
+
+# Local database files (đã có *.db rồi, nhưng thêm tên cụ thể nếu cần)
+ai_os.db
+affiliate.db
+
+# PowerShell scripts (nếu không muốn commit chúng – tuỳ bạn)
+*.ps1
+
+# Audit files (chứa thông tin nhạy cảm)
+API_KEYS_FOUND.txt
+API_KEY_AUDIT.md
+FINAL_REPORT.md
+REPORT.md
+*.csv
+project_snapshot.txt
+*.log

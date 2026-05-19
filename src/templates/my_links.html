@@ -1,0 +1,43 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h1>Quáº£n lÃ½ link Affiliate</h1>
+    <p>Vai trÃ²: {{ role }} | Sá»‘ link cÃ²n láº¡i trong ngÃ y: <strong id="dailyLeft">{{ daily_left }}</strong></p>
+    <div class="card mt-3"><div class="card-header">Táº¡o link má»›i</div><div class="card-body">
+        <div class="form-group"><label>URL sáº£n pháº©m</label><input type="url" id="target_url" class="form-control"></div>
+        <button class="btn btn-primary" onclick="createLink()">Táº¡o link rÃºt gá»n</button>
+        <div id="result" class="mt-2"></div>
+    </div></div>
+    <div class="card mt-3"><div class="card-header">Danh sÃ¡ch link cá»§a báº¡n</div><div class="card-body">
+        {% if links %}
+        <table class="table"><thead><tr><th>Code</th><th>URL Ä‘Ã­ch</th><th>Click</th><th>NgÃ y táº¡o</th><th>Link</th></tr></thead><tbody>
+        {% for link in links %}
+        <tr><td>{{ link[0] }}</td><td>{{ link[1][:50] }}</td><td>{{ link[2] }}</td><td>{{ link[3] }}</td><td><a href="/go/{{ link[0] }}" target="_blank">Má»Ÿ</a></td></tr>
+        {% endfor %}
+        </tbody></table>
+        {% else %}<p>ChÆ°a cÃ³ link nÃ o.</p>{% endif %}
+    </div></div>
+</div>
+<script>
+async function createLink() {
+    const target = document.getElementById('target_url').value;
+    if (!target) { alert('Nháº­p URL'); return; }
+    const resp = await fetch('/api/create_link', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({target_url:target})});
+    const data = await resp.json();
+    if (data.error) {
+        if (data.error.includes('háº¿t lÆ°á»£t')) {
+            const adResp = await fetch('/api/need_ad'); const adData = await adResp.json();
+            if (adData.ad) {
+                if (confirm('Háº¿t lÆ°á»£t. Xem quáº£ng cÃ¡o Ä‘á»ƒ nháº­n thÃªm?')) {
+                    window.open(adData.ad.destination_url,'_blank');
+                    setTimeout(async () => {
+                        await fetch('/api/watch_ad', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ad_id:adData.ad.id})});
+                        location.reload();
+                    }, 5000);
+                }
+            } else alert('KhÃ´ng cÃ³ quáº£ng cÃ¡o.');
+        } else alert(data.error);
+    } else { document.getElementById('result').innerHTML = `<div class="alert alert-success">Link: <a href="${data.link}" target="_blank">${data.link}</a></div>`; setTimeout(()=>location.reload(),2000); }
+}
+</script>
+{% endblock %}

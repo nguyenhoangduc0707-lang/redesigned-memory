@@ -1,0 +1,13 @@
+﻿{% extends "base.html" %}
+{% block title %}Dự đoán chiến dịch{% endblock %}
+{% block content %}
+<h2>Dự đoán cho chiến dịch #{{ campaign_id }}</h2>
+<div class="card">
+    <div class="card-body">
+        <p><strong>Số bài đăng dự đoán:</strong> {{ prediction.predicted_posts }}</p>
+        <p><strong>Số đơn hàng dự đoán:</strong> {{ prediction.predicted_sales }}</p>
+        <p><strong>Doanh thu dự đoán:</strong> {{ prediction.predicted_revenue }} VND</p>
+        <a href="{{ url_for('list_campaigns') }}" class="btn btn-primary">Quay lại</a>
+    </div>
+</div>
+{% endblock %}

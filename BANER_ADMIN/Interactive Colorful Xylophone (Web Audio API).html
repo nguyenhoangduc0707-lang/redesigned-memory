@@ -1,0 +1,107 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Xylophone Web</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
+
+  <h1 class="text-3xl font-bold mb-6">🎵 Xylophone Web</h1>
+
+  <div id="xylophone" class="flex gap-2"></div>
+
+  <p class="mt-6 text-gray-300 text-sm text-center max-w-md">
+    Click vào các phím hoặc dùng bàn phím (A S D F G H J) để chơi.  
+    Mỗi phím tạo âm thanh bằng Web Audio API với tần số khác nhau.
+  </p>
+
+<script>
+const notes = [
+  { key: "A", freq: 261.63, color: "bg-red-500" },   // C
+  { key: "S", freq: 293.66, color: "bg-orange-500" },// D
+  { key: "D", freq: 329.63, color: "bg-yellow-500" },// E
+  { key: "F", freq: 349.23, color: "bg-green-500" }, // F
+  { key: "G", freq: 392.00, color: "bg-blue-500" },  // G
+  { key: "H", freq: 440.00, color: "bg-indigo-500" },// A
+  { key: "J", freq: 493.88, color: "bg-purple-500" } // B
+];
+
+const container = document.getElementById("xylophone");
+const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+function playSound(freq) {
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+
+  osc.type = "sine";
+  osc.frequency.value = freq;
+
+  gain.gain.setValueAtTime(0.001, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.5, audioCtx.currentTime + 0.01);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 1);
+
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+
+  osc.start();
+  osc.stop(audioCtx.currentTime + 1);
+}
+
+function animateKey(el) {
+  el.classList.add("scale-110", "brightness-150");
+  setTimeout(() => {
+    el.classList.remove("scale-110", "brightness-150");
+  }, 150);
+}
+
+notes.forEach(note => {
+  const key = document.createElement("div");
+  key.textContent = note.key;
+  key.className = `${note.color} w-14 h-40 flex items-end justify-center pb-2 text-black font-bold rounded-lg cursor-pointer transition transform`;
+  
+  key.addEventListener("click", () => {
+    playSound(note.freq);
+    animateKey(key);
+  });
+
+  container.appendChild(key);
+});
+
+document.addEventListener("keydown", (e) => {
+  const note = notes.find(n => n.key === e.key.toUpperCase());
+  if (!note) return;
+
+  const keyEl = [...container.children].find(k => k.textContent === note.key);
+  playSound(note.freq);
+  animateKey(keyEl);
+});
+</script>
+
+<script>window.parent.postMessage({ action: "ready" }, "*"); 
+ 
+window.console = new Proxy(console, {
+  get(target, prop) {
+    if (['log', 'warn', 'error'].includes(prop)) {
+      return new Proxy(target[prop], {
+        apply(fn, thisArg, args) {
+          fn.apply(thisArg, args);
+          window.parent.postMessage({ action: 'console', 
+            type: prop, 
+            args: args.map((arg) => {
+              try {
+                return JSON.stringify(arg).replace(/^["']|["']$/g, '');
+              } catch (e) {
+                return arg;
+              }
+            }) 
+          }, '*');
+        }
+      });
+    }
+    return target[prop];
+  }
+});
+</script></body>
+</html>

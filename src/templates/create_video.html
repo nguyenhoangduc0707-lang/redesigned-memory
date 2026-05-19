@@ -1,0 +1,17 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Tạo video từ ảnh và văn bản</h2>
+    <form method="post" enctype="multipart/form-data">
+        <div>
+            <label>Chọn ảnh (có thể chọn nhiều):</label>
+            <input type="file" name="images" multiple accept="image/*" required>
+        </div>
+        <div>
+            <label>Nội dung giọng đọc:</label>
+            <textarea name="caption" rows="4" cols="50" placeholder="Nhập mô tả sản phẩm..."></textarea>
+        </div>
+        <button type="submit">Tạo video</button>
+    </form>
+</div>
+{% endblock %}

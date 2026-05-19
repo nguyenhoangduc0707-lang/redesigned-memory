@@ -1,0 +1,117 @@
+import os
+import subprocess
+from openai import OpenAI
+from prompt_toolkit import PromptSession
+from prompt_toolkit.history import FileHistory
+from rich.console import Console
+from rich.layout import Layout
+from rich.panel import Panel
+from rich.live import Live
+from rich.text import Text
+from rich.syntax import Syntax
+import threading
+import time
+
+# ---------- Cấu hình ----------
+MODEL = "gpt-3.5-turbo"
+SYSTEM_PROMPT = """You are a PowerShell assistant. Only respond with PowerShell commands. No explanation. Just command(s)."""
+
+class ChatTerminal:
+    def __init__(self):
+        self.client = OpenAI()
+        self.session = PromptSession(history=FileHistory('.ps_history'))
+        self.console = Console()
+        self.layout = Layout()
+        self.layout.split(
+            Layout(name="chat_line", size=3),
+            Layout(name="output_area", ratio=1),
+            Layout(name="input_line", size=3)
+        )
+        self.chat_history = []  # list of (role, content)
+        self.output_buffer = []  # list of strings
+        self.running = True
+
+    def update_display(self):
+        # Cập nhật khung chat_line: chỉ hiển thị 1 dòng cuối cùng của lịch sử chat
+        if self.chat_history:
+            last_role, last_msg = self.chat_history[-1]
+            if last_role == 'user':
+                chat_content = f"[bold yellow]You:[/bold yellow] {last_msg}"
+            else:
+                chat_content = f"[bold cyan]AI:[/bold cyan] {last_msg[:100]}"
+        else:
+            chat_content = "[dim]No messages yet[/dim]"
+        self.layout["chat_line"].update(Panel(chat_content, title="Last Chat", border_style="blue"))
+
+        # Cập nhật output_area: hiển thị các output lệnh và code
+        output_text = "\n".join(self.output_buffer[-50:])  # giữ 50 dòng cuối
+        self.layout["output_area"].update(Panel(output_text, title="Output / Code", border_style="green"))
+
+        # input_line sẽ được xử lý riêng bởi prompt_toolkit, nhưng có thể thêm panel tĩnh
+        self.layout["input_line"].update(Panel("Type your request (exit to quit)", border_style="yellow"))
+
+    def run(self):
+        with Live(self.layout, refresh_per_second=10, screen=True) as live:
+            # Thread riêng để cập nhật màn hình (optional)
+            def refresh():
+                while self.running:
+                    self.update_display()
+                    time.sleep(0.2)
+            t = threading.Thread(target=refresh, daemon=True)
+            t.start()
+
+            while self.running:
+                try:
+                    user_input = self.session.prompt("\n> ")
+                    if user_input.lower() in ('exit', 'quit'):
+                        self.running = False
+                        break
+
+                    # Thêm vào lịch sử chat
+                    self.chat_history.append(('user', user_input))
+                    self.update_display()
+
+                    # Gọi AI
+                    self.output_buffer.append(f"[Calling AI...]")
+                    self.update_display()
+                    response = self.client.chat.completions.create(
+                        model=MODEL,
+                        messages=[{"role": "system", "content": SYSTEM_PROMPT},
+                                  {"role": "user", "content": user_input}],
+                        temperature=0.2,
+                    )
+                    ai_command = response.choices[0].message.content.strip()
+                    self.chat_history.append(('ai', ai_command))
+                    self.update_display()
+
+                    # Hiển thị command và xác nhận
+                    self.output_buffer.append(f"Generated command: {ai_command}")
+                    self.update_display()
+
+                    confirm = self.session.prompt("Execute? (y/n): ").lower()
+                    if confirm == 'y':
+                        self.output_buffer.append("Executing...")
+                        self.update_display()
+                        result = subprocess.run(
+                            ["powershell.exe", "-Command", ai_command],
+                            capture_output=True, text=True, shell=True
+                        )
+                        if result.stdout:
+                            self.output_buffer.append(result.stdout)
+                        if result.stderr:
+                            self.output_buffer.append(f"[red]ERROR: {result.stderr}[/red]")
+                        self.output_buffer.append("-" * 40)
+                    else:
+                        self.output_buffer.append("Command cancelled.")
+                    self.update_display()
+
+                except KeyboardInterrupt:
+                    self.running = False
+                    break
+                except Exception as e:
+                    self.output_buffer.append(f"[red]Error: {e}[/red]")
+                    self.update_display()
+
+if __name__ == "__main__":
+    terminal = ChatTerminal()
+    terminal.run()

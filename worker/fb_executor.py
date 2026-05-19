@@ -11,7 +11,7 @@ from datetime import datetime
 # Giả định các module đã tồn tại trong hệ thống
 from worker.base_worker import BaseWorker  # hoặc AtomicBase
 from registry.service_registry import ServiceRegistry
-from core.event_bus import EventBus
+from event_bus import EventBus
 from runtime.retry_policy import RetryPolicy, retry_on_failure
 from sandbox.worker import SandboxedWorker  # nếu cần chạy playwright trong sandbox
 

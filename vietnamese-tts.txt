@@ -1,0 +1,6 @@
+from TTS.api import TTS
+tts = TTS("tts_models/multilingual/multi-dataset/xtts_v2")
+tts.tts_to_file(text="Xin chào, tôi là SEN. Hôm nay bạn thế nào?", 
+                speaker_wav="giọng_mau.wav", 
+                language="vi", 
+                file_path="output.wav")

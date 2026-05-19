@@ -1,0 +1,6 @@
+sqlite3 affiliate.db "CREATE TABLE IF NOT EXISTS algorithm_params (id INTEGER PRIMARY KEY AUTOINCREMENT, platform TEXT, param_name TEXT, param_value REAL, updated_at TIMESTAMP);"
+sqlite3 affiliate.db "CREATE TABLE IF NOT EXISTS campaigns (id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, platform TEXT, start_date TEXT, end_date TEXT, budget REAL, goal TEXT, status TEXT, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP);"
+sqlite3 affiliate.db "CREATE TABLE IF NOT EXISTS campaign_products (campaign_id INTEGER, product_id INTEGER, FOREIGN KEY(campaign_id) REFERENCES campaigns(id), FOREIGN KEY(product_id) REFERENCES products(id));"
+sqlite3 affiliate.db "CREATE TABLE IF NOT EXISTS campaign_predictions (id INTEGER PRIMARY KEY AUTOINCREMENT, campaign_id INTEGER, predicted_posts INTEGER, predicted_likes INTEGER, predicted_sales INTEGER, predicted_revenue REAL, prediction_date TIMESTAMP);"
+sqlite3 affiliate.db "CREATE TABLE IF NOT EXISTS campaign_results (id INTEGER PRIMARY KEY AUTOINCREMENT, campaign_id INTEGER, actual_posts INTEGER, actual_likes INTEGER, actual_sales INTEGER, actual_revenue REAL, accuracy_percent REAL, result_date TIMESTAMP);"
+sqlite3 affiliate.db "CREATE TABLE IF NOT EXISTS algorithm_adjustments (id INTEGER PRIMARY KEY AUTOINCREMENT, platform TEXT, adjustment_reason TEXT, old_params TEXT, new_params TEXT, created_at TIMESTAMP);"

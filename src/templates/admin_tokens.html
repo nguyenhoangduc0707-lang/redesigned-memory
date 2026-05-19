@@ -1,0 +1,39 @@
+﻿{% extends "base.html" %}
+{% block title %}API Tokens{% endblock %}
+{% block content %}
+<h2>Quản lý API Token cho các nền tảng</h2>
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr><th>Platform</th><th>Access Token</th><th>API Key</th><th>API Secret</th><th>Cập nhật lần cuối</th><th>Thao tác</th></tr>
+        </thead>
+        <tbody>
+            {% for t in tokens %}
+            <tr>
+                <td>{{ t[0] }}</td>
+                <td><input type="text" id="token_{{ t[0] }}" value="{{ t[1] }}" class="form-control"></td>
+                <td><input type="text" id="key_{{ t[0] }}" value="{{ t[2] or '' }}" class="form-control"></td>
+                <td><input type="text" id="secret_{{ t[0] }}" value="{{ t[3] or '' }}" class="form-control"></td>
+                <td>{{ t[4] }}</td>
+                <td><button onclick="updateToken('{{ t[0] }}')" class="btn btn-sm btn-primary">Lưu</button></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<script>
+async function updateToken(platform) {
+    const access_token = document.getElementById('token_'+platform).value;
+    const api_key = document.getElementById('key_'+platform).value;
+    const api_secret = document.getElementById('secret_'+platform).value;
+    const res = await fetch('/admin/update_token', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({platform, access_token, api_key, api_secret})
+    });
+    const data = await res.json();
+    if (data.success) alert('Đã cập nhật token cho ' + platform);
+    else alert('Lỗi: ' + data.error);
+}
+</script>
+{% endblock %}

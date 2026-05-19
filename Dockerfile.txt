@@ -1,0 +1,49 @@
+version: '3.8'
+
+FROM python:3.11-slim AS builder
+
+WORKDIR /app
+COPY requirements.txt .
+RUN pip install --user --no-cache-dir -r requirements.txt gunicorn
+
+FROM python:3.11-slim
+WORKDIR /app
+COPY --from=builder /root/.local /root/.local
+COPY . .
+RUN mkdir -p audio logs error_logs && chmod 777 audio logs error_logs
+ENV PATH=/root/.local/bin:$PATH
+EXPOSE 5000
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--workers", "2", "--threads", "2", "src.main:app"]
+
+services:
+  web:
+    build: .
+    container_name: ai_os_kernel_web
+    ports:
+      - "5000:5000"
+    volumes:
+      # Volume cho database (SQLite) để dữ liệu tồn tại sau khi container restart
+      - ./data:/app/data
+      # Volume cho audio và logs
+      - ./audio:/app/audio
+      - ./logs:/app/logs
+      - ./error_logs:/app/error_logs
+    environment:
+      - FLASK_SECRET_KEY=${FLASK_SECRET_KEY:-change_this_in_production}
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-}
+      - FACEBOOK_ACCESS_TOKEN=${FACEBOOK_ACCESS_TOKEN:-}
+      - APIFY_API_TOKEN=${APIFY_API_TOKEN:-}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    env_file:
+      - .env
+    restart: unless-stopped
+    # Nếu muốn dùng Redis cho task queue (tùy chọn), thêm service redis và kết nối
+    # depends_on:
+    #   - redis
+  # redis:
+  #   image: redis:alpine
+  #   container_name: ai_os_kernel_redis
+  #   ports:
+  #     - "6379:6379"
+  #   volumes:
+  #     - ./redis_data:/data

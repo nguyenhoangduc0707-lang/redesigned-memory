@@ -1,0 +1,24 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="container">
+    <h2>Video đã tạo thành công</h2>
+    <video width="100%" controls>
+        <source src="{{ video_url }}" type="video/mp4">
+    </video>
+    <p><strong>Nội dung:</strong> {{ caption }}</p>
+    <a href="{{ video_url }}" download>⬇️ Tải video</a>
+    <button onclick="postToFB()">📘 Đăng lên Facebook</button>
+    <a href="{{ url_for('create_video') }}">🎬 Tạo video khác</a>
+</div>
+<script>
+function postToFB() {
+    fetch('/api/post_video_to_fb', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({video_url: "{{ video_url }}", caption: "{{ caption }}"})
+    })
+    .then(res => res.json())
+    .then(data => alert(data.message));
+}
+</script>
+{% endblock %}

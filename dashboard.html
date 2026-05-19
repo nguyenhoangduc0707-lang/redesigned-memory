@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - AI OS</title>
+</head>
+<body>
+    <h1>Affiliate Automation Dashboard</h1>
+    <p>Chào {{ session.get('user') }} (vai trò: {{ role }})</p>
+    <h2>Bài đăng theo nền tảng</h2>
+    <ul>
+        {% for platform, count in counts.items() %}
+        <li><a href="{{ url_for('posts', platform=platform) }}">{{ platform }}: {{ count }} bài đang chờ</a></li>
+        {% endfor %}
+    </ul>
+    {% if role == 'admin' %}
+    <a href="{{ url_for('run_pipeline') }}">Chạy pipeline</a><br>
+    <a href="{{ url_for('list_campaigns') }}">Quản lý chiến dịch</a>
+    {% endif %}
+    <a href="{{ url_for('logout') }}">Đăng xuất</a>
+</body>
+</html>

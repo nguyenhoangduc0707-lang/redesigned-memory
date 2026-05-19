@@ -1,0 +1,23 @@
+﻿{% extends "base.html" %}
+{% block title %}Bài đăng - {{ platform }}{% endblock %}
+{% block content %}
+<h2>Bài đăng trên {{ platform }}</h2>
+{% if posts %}
+    {% for post in posts %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <p><strong>{{ post.caption }}</strong></p>
+            <p>Link: <a href="{{ post.link }}" target="_blank">{{ post.link }}</a></p>
+            <form method="post" action="{{ url_for('post_to_fb') }}">
+                <input type="hidden" name="post_id" value="{{ post.id }}">
+                <input type="hidden" name="platform" value="{{ platform }}">
+                <button type="submit" class="btn btn-success">Đăng lên {{ platform }}</button>
+            </form>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>Không có bài đăng chờ.</p>
+{% endif %}
+<a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Quay lại Dashboard</a>
+{% endblock %}

@@ -1,0 +1,236 @@
+<h2 class="sr-only">AI OS Kernel V3 – Chat & TTS screen wireframe, dark cyberpunk style</h2>
+<style>
+#kv3 *{box-sizing:border-box}
+#kv3 ::-webkit-scrollbar{width:3px}
+#kv3 ::-webkit-scrollbar-thumb{background:#1e2d3d;border-radius:2px}
+@keyframes kv3-blink{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes kv3-wave{0%,100%{transform:scaleY(.18)}50%{transform:scaleY(1)}}
+@keyframes kv3-pulse{0%,100%{opacity:1}50%{opacity:.35}}
+.kv3-bar{display:inline-block;width:3px;background:#00e5c9;border-radius:2px;transform-origin:50% 100%;animation:kv3-wave .85s ease-in-out infinite}
+.kv3-bar:nth-child(2){animation-delay:.11s}
+.kv3-bar:nth-child(3){animation-delay:.22s}
+.kv3-bar:nth-child(4){animation-delay:.16s}
+.kv3-bar:nth-child(5){animation-delay:.05s}
+.kv3-si{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:6px;cursor:pointer;color:#2a3f54;font-size:16px;transition:all .2s}
+.kv3-si:hover{background:#0d1e2c;color:#00e5c9}
+.kv3-si.act{background:#091c2b;color:#00e5c9;box-shadow:inset 2px 0 0 #00e5c9}
+.kv3-ub{background:#091c2b;border:.5px solid #00e5c930;border-radius:8px;border-top-right-radius:2px;color:#a8d8ea;font-size:12px;line-height:1.6;padding:10px 14px}
+.kv3-ab{background:#10091f;border:.5px solid #a855f728;border-radius:8px;border-top-left-radius:2px;color:#d4c5f0;font-size:12px;line-height:1.6;padding:10px 14px}
+.kv3-tb{background:none;border:.5px solid #1e2d3d;border-radius:4px;color:#2a3f54;font-size:10px;padding:3px 8px;cursor:pointer;display:inline-flex;align-items:center;gap:4px;margin-top:6px;font-family:inherit;letter-spacing:.5px;transition:all .2s}
+.kv3-tb:hover,.kv3-tb.on{border-color:#00e5c9;color:#00e5c9;background:#00e5c908}
+.kv3-inp{background:#040a10;border:.5px solid #1e2d3d;border-radius:6px;color:#00e5c9;font-family:'Courier New',monospace;font-size:12px;padding:9px 12px;width:100%;outline:none;resize:none;transition:border-color .2s;line-height:1.5}
+.kv3-inp:focus{border-color:#00e5c940}
+.kv3-inp::placeholder{color:#1a2a38}
+.kv3-send{background:#00e5c910;border:.5px solid #00e5c940;color:#00e5c9;border-radius:6px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;font-family:inherit}
+.kv3-send:hover{background:#00e5c922;border-color:#00e5c9}
+.kv3-send:active{transform:scale(.94)}
+.kv3-mic{background:none;border:.5px solid #1e2d3d;color:#2a3f54;border-radius:6px;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;font-size:14px;transition:all .2s;font-family:inherit}
+.kv3-mic:hover,.kv3-mic.on{border-color:#a855f7;color:#a855f7;background:#a855f710}
+.kv3-wv{display:none;margin-top:6px;align-items:center;gap:8px}
+</style>
+
+<div id="kv3" style="font-family:'Courier New',Courier,monospace;padding:.5rem 0">
+<div style="background:#0d1117;border-radius:12px;border:.5px solid #1e2d3d;overflow:hidden;height:574px;display:flex;flex-direction:column">
+
+  <div style="background:#070b10;border-bottom:.5px solid #1e2d3d;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+    <div style="display:flex;gap:5px">
+      <div style="width:9px;height:9px;border-radius:50%;background:#ff5f56"></div>
+      <div style="width:9px;height:9px;border-radius:50%;background:#ffbd2e"></div>
+      <div style="width:9px;height:9px;border-radius:50%;background:#27c93f"></div>
+    </div>
+    <span style="color:#00e5c9;font-size:11px;letter-spacing:3px;font-weight:bold">AI_OS_KERNEL_V3</span>
+    <span style="color:#2a3f54;font-size:10px;letter-spacing:1px">CHAT_MODULE</span>
+    <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+      <div style="width:7px;height:7px;border-radius:50%;background:#27c93f;animation:kv3-pulse 2s ease-in-out infinite"></div>
+      <span style="color:#27c93f;font-size:10px;letter-spacing:1px">SYS.ONLINE</span>
+    </div>
+  </div>
+
+  <div style="display:flex;flex:1;overflow:hidden">
+
+    <div style="width:44px;background:#070b10;border-right:.5px solid #1e2d3d;display:flex;flex-direction:column;align-items:center;padding:10px 0;gap:4px;flex-shrink:0">
+      <div class="kv3-si" title="Dashboard"><i class="ti ti-layout-dashboard" aria-hidden="true"></i></div>
+      <div class="kv3-si act" title="Chat"><i class="ti ti-message-2" aria-hidden="true"></i></div>
+      <div class="kv3-si" title="Pipeline Agents"><i class="ti ti-git-branch" aria-hidden="true"></i></div>
+      <div class="kv3-si" title="Video/Audio"><i class="ti ti-video" aria-hidden="true"></i></div>
+      <div class="kv3-si" title="Voice Commander"><i class="ti ti-microphone" aria-hidden="true"></i></div>
+      <div class="kv3-si" title="Reports"><i class="ti ti-file-analytics" aria-hidden="true"></i></div>
+      <div style="flex:1"></div>
+      <div class="kv3-si" title="Settings"><i class="ti ti-settings" aria-hidden="true"></i></div>
+      <div style="width:26px;height:26px;border-radius:50%;background:#091c2b;border:.5px solid #00e5c940;display:flex;align-items:center;justify-content:center;color:#00e5c9;font-size:10px;font-weight:bold;cursor:pointer;margin-bottom:4px" title="admin">A</div>
+    </div>
+
+    <div style="flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0">
+
+      <div style="background:#080e18;border-bottom:.5px solid #1e2d3d;padding:10px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+        <div style="width:30px;height:30px;border-radius:6px;background:#10091f;border:.5px solid #a855f730;display:flex;align-items:center;justify-content:center;color:#a855f7;font-size:14px;flex-shrink:0"><i class="ti ti-robot" aria-hidden="true"></i></div>
+        <div>
+          <div style="color:#e2e8f0;font-size:12px;font-weight:bold;letter-spacing:1px">AI_OS_AGENT</div>
+          <div style="color:#2a3f54;font-size:10px">claude-opus-4 · TTS: pyttsx3</div>
+        </div>
+        <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+          <span style="color:#2a3f54;font-size:10px;letter-spacing:1px">AUTO-TTS</span>
+          <div id="kv3-tgl" onclick="kv3TogTTS()" style="width:32px;height:18px;background:#091c2b;border:.5px solid #1e2d3d;border-radius:9px;cursor:pointer;position:relative;transition:all .3s">
+            <div id="kv3-knob" style="position:absolute;top:2px;left:2px;width:14px;height:14px;border-radius:50%;background:#2a3f54;transition:all .3s;pointer-events:none"></div>
+          </div>
+          <span id="kv3-tts-lbl" style="color:#2a3f54;font-size:10px;letter-spacing:1px;min-width:20px">OFF</span>
+        </div>
+      </div>
+
+      <div id="kv3-msgs" style="flex:1;overflow-y:auto;padding:14px 16px;display:flex;flex-direction:column;gap:14px;scroll-behavior:smooth">
+
+        <div style="text-align:center">
+          <span style="background:#070b10;border:.5px solid #1e2d3d;color:#1e2d3d;font-size:10px;padding:3px 12px;border-radius:4px;letter-spacing:1px">── SESSION_INIT · 2026-05-17 14:30:02 ──</span>
+        </div>
+
+        <div style="align-self:flex-start;max-width:86%">
+          <div style="font-size:10px;color:#a855f750;margin-bottom:5px;letter-spacing:1px"><i class="ti ti-robot" style="font-size:10px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>AI_OS_AGENT</div>
+          <div class="kv3-ab">Chào mừng đến AI_OS_KERNEL_V3. Hệ thống đã khởi động thành công.<br><span style="color:#a855f760">→</span> Agents: <span style="background:#091c2b;color:#00e5c9;border:.5px solid #00e5c928;padding:1px 6px;border-radius:3px;font-size:10px;letter-spacing:.5px">6/6 ACTIVE</span>&nbsp;DB: <span style="background:#091c2b;color:#27c93f;border:.5px solid #27c93f28;padding:1px 6px;border-radius:3px;font-size:10px;letter-spacing:.5px">CONNECTED</span></div>
+          <button class="kv3-tb" data-id="m0"><i class="ti ti-player-play" style="font-size:10px" aria-hidden="true"></i> PLAY</button>
+          <div id="kv3-wv-m0" class="kv3-wv"><div style="height:20px;display:flex;align-items:flex-end;gap:2px"><div class="kv3-bar" style="height:8px"></div><div class="kv3-bar" style="height:14px"></div><div class="kv3-bar" style="height:18px"></div><div class="kv3-bar" style="height:12px"></div><div class="kv3-bar" style="height:9px"></div></div><span style="color:#00e5c9;font-size:10px;letter-spacing:1.5px">SPEAKING...</span></div>
+        </div>
+
+        <div style="align-self:flex-end;max-width:78%">
+          <div style="font-size:10px;color:#00e5c960;text-align:right;margin-bottom:5px;letter-spacing:1px"><i class="ti ti-user" style="font-size:10px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>ADMIN</div>
+          <div class="kv3-ub">Phân tích pipeline hiện tại và cho tôi biết trạng thái các agent.</div>
+        </div>
+
+        <div style="align-self:flex-start;max-width:86%">
+          <div style="font-size:10px;color:#a855f750;margin-bottom:5px;letter-spacing:1px"><i class="ti ti-robot" style="font-size:10px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>AI_OS_AGENT</div>
+          <div class="kv3-ab"><span style="color:#a855f7">▸ PIPELINE STATUS REPORT</span><br><br><span style="color:#1e2d3d">┌─ Agents (6/6) ──────────┐</span><br><span style="color:#00e5c9">  ✓ Planner</span>&nbsp;&nbsp;&nbsp;<span style="color:#1e2d3d">│ Idle</span><br><span style="color:#00e5c9">  ✓ Executor</span>&nbsp;&nbsp;<span style="color:#1e2d3d">│ Idle</span><br><span style="color:#00e5c9">  ✓ Reviewer</span>&nbsp;&nbsp;<span style="color:#1e2d3d">│ Idle</span><br><span style="color:#27c93f">  ✓ Debug</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="color:#27c93f">│ Running</span><br><span style="color:#00e5c9">  ✓ Improver</span>&nbsp;&nbsp;<span style="color:#1e2d3d">│ Idle</span><br><span style="color:#f59e0b">  ✓ AutoFix</span>&nbsp;&nbsp;&nbsp;<span style="color:#f59e0b">│ Standby</span><br><span style="color:#1e2d3d">└─────────────────────────┘</span><br><br>Không có lỗi phát hiện. Hệ thống hoạt động bình thường.</div>
+          <button class="kv3-tb" data-id="m1"><i class="ti ti-player-play" style="font-size:10px" aria-hidden="true"></i> PLAY</button>
+          <div id="kv3-wv-m1" class="kv3-wv"><div style="height:20px;display:flex;align-items:flex-end;gap:2px"><div class="kv3-bar" style="height:10px"></div><div class="kv3-bar" style="height:16px"></div><div class="kv3-bar" style="height:18px"></div><div class="kv3-bar" style="height:13px"></div><div class="kv3-bar" style="height:8px"></div></div><span style="color:#00e5c9;font-size:10px;letter-spacing:1.5px">SPEAKING...</span></div>
+        </div>
+
+        <div style="align-self:flex-end;max-width:78%">
+          <div style="font-size:10px;color:#00e5c960;text-align:right;margin-bottom:5px;letter-spacing:1px"><i class="ti ti-user" style="font-size:10px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>ADMIN</div>
+          <div class="kv3-ub">Transcribe file audio test.m4a, dịch sang tiếng Việt.</div>
+        </div>
+
+        <div style="align-self:flex-start;max-width:86%">
+          <div style="font-size:10px;color:#a855f750;margin-bottom:5px;letter-spacing:1px"><i class="ti ti-robot" style="font-size:10px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>AI_OS_AGENT</div>
+          <div class="kv3-ab"><span style="color:#a855f7">▸ WHISPER TRANSCRIPTION COMPLETE</span><br><span style="color:#1e2d3d">File: test.m4a · 00:45 · vi-VN</span><br><br>Đây là nội dung đã được nhận dạng từ file âm thanh. Whisper xử lý thành công với độ chính xác cao.</div>
+          <button class="kv3-tb" data-id="m2"><i class="ti ti-player-play" style="font-size:10px" aria-hidden="true"></i> PLAY</button>
+          <div id="kv3-wv-m2" class="kv3-wv"><div style="height:20px;display:flex;align-items:flex-end;gap:2px"><div class="kv3-bar" style="height:7px"></div><div class="kv3-bar" style="height:15px"></div><div class="kv3-bar" style="height:18px"></div><div class="kv3-bar" style="height:11px"></div><div class="kv3-bar" style="height:9px"></div></div><span style="color:#00e5c9;font-size:10px;letter-spacing:1.5px">SPEAKING...</span></div>
+        </div>
+
+      </div>
+
+      <div id="kv3-sbar" style="display:none;background:#00e5c908;border-top:.5px solid #00e5c928;padding:5px 16px;align-items:center;gap:10px;flex-shrink:0">
+        <div style="height:18px;display:flex;align-items:flex-end;gap:2px">
+          <div class="kv3-bar" style="height:6px"></div>
+          <div class="kv3-bar" style="height:12px"></div>
+          <div class="kv3-bar" style="height:16px"></div>
+          <div class="kv3-bar" style="height:10px"></div>
+          <div class="kv3-bar" style="height:8px"></div>
+        </div>
+        <span style="color:#00e5c9;font-size:10px;letter-spacing:2px">TTS ACTIVE · SPEAKING</span>
+        <div style="margin-left:auto;font-size:10px;color:#1e2d3d">voice: <span style="color:#a855f7">pyttsx3</span>&nbsp;&nbsp;speed: <span style="color:#f59e0b">1.0x</span></div>
+      </div>
+
+      <div style="background:#070b10;border-top:.5px solid #1e2d3d;padding:10px 16px;flex-shrink:0">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:6px">
+          <span style="color:#00e5c9;font-size:10px;letter-spacing:1px">ADMIN@AI_OS</span>
+          <span style="color:#1e2d3d;font-size:10px">~/chat $</span>
+          <span style="color:#00e5c9;font-size:11px;animation:kv3-blink 1s step-end infinite">▮</span>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-end">
+          <textarea id="kv3-inp" class="kv3-inp" rows="2" placeholder="Nhập lệnh hoặc câu hỏi... (Enter gửi, Shift+Enter xuống dòng)" aria-label="Chat input"></textarea>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <button id="kv3-micbtn" class="kv3-mic" onclick="kv3TogMic()" title="Voice input" aria-label="Voice input"><i class="ti ti-microphone" style="font-size:14px" aria-hidden="true"></i></button>
+            <button class="kv3-send" onclick="kv3Send()" title="Send" aria-label="Send"><i class="ti ti-send" style="font-size:14px" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="background:#040810;border-top:.5px solid #1e2d3d;padding:3px 16px;display:flex;align-items:center;gap:16px;flex-shrink:0">
+    <span style="color:#27c93f;font-size:10px;letter-spacing:1px">● WHISPER:LOADED</span>
+    <span style="color:#1e2d3d;font-size:10px">│</span>
+    <span style="color:#00e5c9;font-size:10px;letter-spacing:1px">● CLAUDE:OPUS</span>
+    <span style="color:#1e2d3d;font-size:10px">│</span>
+    <span style="color:#f59e0b;font-size:10px;letter-spacing:1px">▲ RAM 8.2/16GB</span>
+    <span style="color:#1e2d3d;font-size:10px;margin-left:auto;letter-spacing:.5px">2026-05-17 14:32</span>
+  </div>
+
+</div>
+</div>
+
+<script>
+var kv3TTS=false,kv3Act=null,kv3Timer=null,kv3Mic=false,kv3N=3;
+
+function kv3TogTTS(){
+  kv3TTS=!kv3TTS;
+  var tgl=document.getElementById('kv3-tgl'),knob=document.getElementById('kv3-knob'),lbl=document.getElementById('kv3-tts-lbl');
+  if(kv3TTS){tgl.style.background='#00e5c918';tgl.style.borderColor='#00e5c940';knob.style.transform='translateX(14px)';knob.style.background='#00e5c9';lbl.style.color='#00e5c9';lbl.textContent='ON';}
+  else{tgl.style.background='#091c2b';tgl.style.borderColor='#1e2d3d';knob.style.transform='translateX(0)';knob.style.background='#2a3f54';lbl.style.color='#2a3f54';lbl.textContent='OFF';}
+}
+
+function kv3Play(id){
+  if(kv3Act)kv3Stop();
+  kv3Act=id;
+  document.getElementById('kv3-sbar').style.display='flex';
+  var wv=document.getElementById('kv3-wv-'+id);
+  if(wv)wv.style.display='flex';
+  document.querySelectorAll('.kv3-tb[data-id="'+id+'"]').forEach(function(b){b.classList.add('on');b.innerHTML='<i class="ti ti-player-pause" style="font-size:10px" aria-hidden="true"></i> STOP';});
+  kv3Timer=setTimeout(kv3Stop,5000);
+}
+
+function kv3Stop(){
+  clearTimeout(kv3Timer);
+  var prev=kv3Act;kv3Act=null;
+  document.getElementById('kv3-sbar').style.display='none';
+  if(prev){var wv=document.getElementById('kv3-wv-'+prev);if(wv)wv.style.display='none';}
+  document.querySelectorAll('.kv3-tb').forEach(function(b){b.classList.remove('on');b.innerHTML='<i class="ti ti-player-play" style="font-size:10px" aria-hidden="true"></i> PLAY';});
+}
+
+document.addEventListener('click',function(e){
+  var b=e.target.closest('.kv3-tb');
+  if(!b)return;
+  var id=b.dataset.id;
+  if(kv3Act===id)kv3Stop();else kv3Play(id);
+});
+
+function kv3TogMic(){
+  kv3Mic=!kv3Mic;
+  var btn=document.getElementById('kv3-micbtn');
+  btn.classList.toggle('on',kv3Mic);
+  if(kv3Mic){setTimeout(function(){kv3Mic=false;btn.classList.remove('on');document.getElementById('kv3-inp').value='Tóm tắt nội dung file video report_q1.mp4';},2200);}
+}
+
+function kv3Esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function kv3Send(){
+  var inp=document.getElementById('kv3-inp');
+  var txt=inp.value.trim();if(!txt)return;
+  inp.value='';
+  var list=document.getElementById('kv3-msgs');
+
+  var um=document.createElement('div');
+  um.style.cssText='align-self:flex-end;max-width:78%';
+  um.innerHTML='<div style="font-size:10px;color:#00e5c960;text-align:right;margin-bottom:5px;letter-spacing:1px"><i class="ti ti-user" style="font-size:10px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>ADMIN</div><div class="kv3-ub">'+kv3Esc(txt)+'</div>';
+  list.appendChild(um);list.scrollTop=list.scrollHeight;
+
+  var tid='kv3-t'+Date.now();
+  var tm=document.createElement('div');
+  tm.id=tid;tm.style.cssText='align-self:flex-start;max-width:86%';
+  tm.innerHTML='<div style="font-size:10px;color:#a855f750;margin-bottom:5px;letter-spacing:1px"><i class="ti ti-robot" style="font-size:10px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>AI_OS_AGENT</div><div class="kv3-ab" style="color:#1e2d3d"><span style="color:#a855f7;animation:kv3-blink .7s step-end infinite">▮</span> PROCESSING...</div>';
+  list.appendChild(tm);list.scrollTop=list.scrollHeight;
+
+  setTimeout(function(){
+    var el=document.getElementById(tid);if(!el)return;
+    var mid='m'+kv3N++;
+    var short=kv3Esc(txt.length>44?txt.slice(0,44)+'...':txt);
+    el.id='';
+    el.innerHTML='<div style="font-size:10px;color:#a855f750;margin-bottom:5px;letter-spacing:1px"><i class="ti ti-robot" style="font-size:10px;vertical-align:-1px;margin-right:4px" aria-hidden="true"></i>AI_OS_AGENT</div><div class="kv3-ab"><span style="color:#a855f7">▸ RESPONSE</span><br><br>Đã nhận: "<span style="color:#00e5c9">'+short+'</span>"<br><br>Yêu cầu đã được xử lý thành công.</div><button class="kv3-tb" data-id="'+mid+'"><i class="ti ti-player-play" style="font-size:10px" aria-hidden="true"></i> PLAY</button><div id="kv3-wv-'+mid+'" class="kv3-wv"><div style="height:20px;display:flex;align-items:flex-end;gap:2px"><div class="kv3-bar" style="height:8px"></div><div class="kv3-bar" style="height:14px"></div><div class="kv3-bar" style="height:18px"></div><div class="kv3-bar" style="height:12px"></div><div class="kv3-bar" style="height:9px"></div></div><span style="color:#00e5c9;font-size:10px;letter-spacing:1.5px">SPEAKING...</span></div>';
+    list.scrollTop=list.scrollHeight;
+    if(kv3TTS)setTimeout(function(){kv3Play(mid);},420);
+  },1400);
+}
+
+document.getElementById('kv3-inp').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();kv3Send();}
+});
+</script>

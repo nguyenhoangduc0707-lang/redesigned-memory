@@ -1,0 +1,57 @@
+import joblib
+import sys
+import os
+
+# Thêm đường dẫn để import các module nội bộ
+sys.path.insert(0, os.getcwd())
+
+# Cố gắng import các module có sẵn
+try:
+    from src.learning.sentiment_analyzer import SentimentAnalyzer
+    SENTIMENT_AVAILABLE = True
+except ImportError:
+    SENTIMENT_AVAILABLE = False
+    print("⚠️ Không thể import SentimentAnalyzer")
+
+try:
+    from src.ml.algo_simulator import AlgoSimulator
+    ALGO_AVAILABLE = True
+except ImportError:
+    ALGO_AVAILABLE = False
+    print("⚠️ Không thể import AlgoSimulator")
+
+class SEN_Brain:
+    def __init__(self, model_path='models/sales_prediction_model.pkl'):
+        self.model = joblib.load(model_path)
+        self.sentiment = SentimentAnalyzer() if SENTIMENT_AVAILABLE else None
+        self.algo = AlgoSimulator() if ALGO_AVAILABLE else None
+        print("🧠 SEN Brain đã sẵn sàng (LinearRegression + Sentiment + Algo)")
+
+    def predict_sales(self, features):
+        """Dự báo doanh số từ vector đặc trưng (list hoặc array)"""
+        try:
+            return self.model.predict([features])[0]
+        except Exception as e:
+            return f"Lỗi dự báo: {e}"
+
+    def analyze_sentiment(self, text):
+        if self.sentiment:
+            try:
+                return self.sentiment.analyze(text)
+            except Exception as e:
+                return f"Lỗi phân tích cảm xúc: {e}"
+        return "Chức năng phân tích cảm xúc chưa sẵn sàng"
+
+    def optimize_algo(self, campaign_data):
+        if self.algo:
+            try:
+                return self.algo.optimize(campaign_data)
+            except Exception as e:
+                return f"Lỗi tối ưu thuật toán: {e}"
+        return "Chức năng tối ưu thuật toán chưa sẵn sàng"
+
+if __name__ == "__main__":
+    brain = SEN_Brain()
+    # Test thử với dữ liệu giả
+    print("Kết quả dự báo (ví dụ [100, 50, 30]):", brain.predict_sales([100, 50, 30]))
+    print("Phân tích cảm xúc (nếu có):", brain.analyze_sentiment("Sản phẩm tuyệt vời!"))

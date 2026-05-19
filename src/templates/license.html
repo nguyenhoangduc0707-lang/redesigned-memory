@@ -1,0 +1,46 @@
+﻿{% extends "base.html" %}
+{% block title %}Giấy khai sinh SEN{% endblock %}
+{% block content %}
+<h1 class="text-center">🧾 GIẤY KHAI SINH SEN</h1>
+<p class="text-center"><strong>Ngày khởi dựng:</strong> 04/04/2026 &nbsp;|&nbsp; <strong>Ngày hoàn thành:</strong> 18/05/2026</p>
+<p class="text-center text-muted"><em>Ngày hoàn thành trùng với ngày sinh con trai đầu của người sáng lập – Nguyễn Khôi Nguyên.</em></p>
+<hr>
+<h3>👥 Đồng sáng lập</h3>
+<p>Nhập số CCCD để xem thông tin cá nhân (chỉ khi xác thực):</p>
+<div class="row">
+    <div class="col-md-4">
+        <div class="input-group">
+            <input type="password" id="cccd" class="form-control" placeholder="Số CCCD">
+            <button class="btn btn-primary" onclick="verifyCCCD()">Xác thực</button>
+        </div>
+    </div>
+</div>
+<div id="founderInfo" class="mt-3"></div>
+<hr>
+<h3>📜 Hiệp ước đồng sáng lập (Tóm lược)</h3>
+<ul>
+    <li><strong>Quyền sở hữu mã nguồn:</strong> Nguyễn Hoàng Đức – 100%.</li>
+    <li><strong>Quyền sử dụng:</strong> Nguyễn Thanh Tiến và các đồng sáng lập được toàn quyền sử dụng hệ thống.</li>
+    <li><strong>Quyết định kinh doanh:</strong> Phải có chữ ký đồng thuận của cả hai.</li>
+    <li><strong>Bảo mật:</strong> Thông tin cá nhân chỉ hiển thị khi xác thực CCCD.</li>
+</ul>
+<p class="small">Bản đầy đủ được lưu trong mã nguồn, mọi thay đổi phải có chữ ký số của cả hai bên.</p>
+<script>
+async function verifyCCCD() {
+    const cccd = document.getElementById('cccd').value;
+    const res = await fetch('/verify_cccd', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({cccd})
+    });
+    const data = await res.json();
+    const infoDiv = document.getElementById('founderInfo');
+    if (data.success) {
+        const info = data.info;
+        infoDiv.innerHTML = `<div class="alert alert-success"><strong>${info.fullname}</strong><br>Ngày sinh: ${info.dob}<br>Số điện thoại: ${info.phone}<br>Vai trò: ${info.role}<br>Chữ ký số: ${info.signature}</div>`;
+    } else {
+        infoDiv.innerHTML = `<div class="alert alert-danger">Số CCCD không hợp lệ hoặc không có quyền truy cập.</div>`;
+    }
+}
+</script>
+{% endblock %}

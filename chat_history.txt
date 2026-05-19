@@ -1,0 +1,95 @@
+SEN|Tạm biệt anh Đức. Hẹn gặp lại!
+SEN|Tạm biệt anh Đức. Hẹn gặp lại!
+Anh Đức|/history còn nv gì chúng ta chưa hoàn thành không
+Anh Đức|/history còn nv gì chúng ta chưa hoàn thành không
+SEN|[Local LLM giả lập] Bạn đã nói: /history còn nv gì chúng ta chưa hoàn thành không
+SEN|[Local LLM giả lập] Bạn đã nói: /history còn nv gì chúng ta chưa hoàn thành không
+SEN|SEN: Tạm biệt anh Đức. Hẹn gặp lại!
+Anh Đức: /history còn nv gì chúng ta chưa hoàn thành không
+SEN: [Local LLM giả lập] Bạn đã nói: /history còn nv gì chúng ta chưa hoàn thành không
+SEN|SEN: Tạm biệt anh Đức. Hẹn gặp lại!
+Anh Đức: /history còn nv gì chúng ta chưa hoàn thành không
+SEN: [Local LLM giả lập] Bạn đã nói: /history còn nv gì chúng ta chưa hoàn thành không
+Anh Đức|bạn tên gì
+Anh Đức|bạn tên gì
+SEN|[Local LLM giả lập] Bạn đã nói: bạn tên gì
+SEN|[Local LLM giả lập] Bạn đã nói: bạn tên gì
+SEN|Tạm biệt anh Đức. Hẹn gặp lại!
+SEN|Tạm biệt anh Đức. Hẹn gặp lại!
+Anh Đức|bạn tên gì
+Anh Đức|bạn tên gì
+SEN|Tôi là Gemma, trợ lý AI. 😊 
+
+SEN|Tôi là Gemma, trợ lý AI. 😊
+SEN|📊 Dự báo doanh số: 543 VND
+SEN|📊 Dự báo doanh số: 543 VND
+SEN|📊 Dự báo doanh số: 543 VND
+SEN|📊 Dự báo doanh số: 543 VND
+Anh Đức|alo
+Anh Đức|alo
+SEN|Hello! 👋  How can I help you today? 😊 
+
+SEN|Hello! 👋  How can I help you today? 😊 
+
+Anh Đức|bạn có thrr làm đc gì
+Anh Đức|bạn có thrr làm đc gì
+SEN|I am a large language model, trained by Google. 
+
+Here are some of the things I can do: 
+
+* **Answer your questions:** I can provide information on a wide range of topics based on my training data. 
+* **Generate creative content:**  I can help you write stories, poems, emails, or even code!
+* **Translate languages:** I can translate text between many different languages.
+* **Summarize text:** Give me a long piece of writing and I can give you the main points.
+* **Engage in conversation:** I can chat with you about various subjects and try to be informative and helpful.
+
+
+Let me know what you need help with, and I'll do my best! 🌎  😊 
+
+SEN|I am a large language model, trained by Google. 
+
+Here are some of the things I can do: 
+
+* **Answer your questions:** I can provide information on a wide range of topics based on my training data. 
+* **Generate creative content:**  I can help you write stories, poems, emails, or even code!
+* **Translate languages:** I can translate text between many different languages.
+* **Summarize text:** Give me a long piece of writing and I can give you the main points.
+* **Engage in conversation:** I can chat with you about various subjects and try to be informative and helpful.
+
+
+Let me know what you need help with, and I'll do my best! 🌎  😊 
+
+Anh Đức|/exit()
+Anh Đức|/exit()
+SEN|Please let me know if you have any other requests or questions! I'm happy to help. 😄 
+
+For now, I'm going to exit the conversation...  👋 
+
+SEN|Please let me know if you have any other requests or questions! I'm happy to help. 😄 
+SEN|Đã cập nhật trạng thái.
+SEN|Đã cập nhật trạng thái.
+SEN|📊 Dự báo doanh số: 543 VND
+SEN|📊 Dự báo doanh số: 543 VND
+Anh Đức|ss
+Anh Đức|ss
+SEN|Please provide me with more context!  "ss" by itself doesn't give me much to work with. 
+
+What would you like to do? Do you want:
+
+* **Information about something starting with "ss"?** (like "SS" as in ships, or a specific term)
+* **To use "ss" for an online action?** (Like sending a message through a platform that uses "ss" ) 
+* **Something else entirely?**
+
+
+Let me know and I'll do my best to help! 😊  
+
+SEN|Please provide me with more context!  "ss" by itself doesn't give me much to work with. 
+SEN|📊 Dự báo doanh số: 543 VND
+SEN|📊 Dự báo doanh số: 543 VND
+SEN|[NotebookLM demo] Câu hỏi: chaof banj
+SEN|[NotebookLM demo] Câu hỏi: chaof banj
+SEN|[NotebookLM demo] Câu hỏi: chaof banj
+SEN|[NotebookLM demo] Câu hỏi: chaof banj
+SEN|[NotebookLM demo] Câu hỏi: /status chào bạn
+chào bạn|Tôi chưa hiểu. Hãy thử 'dự báo', 'cảm xúc', 'tối ưu' hoặc /help.
+dự báo|⚠️ Cần 3 số: ngân sách, số bài đăng, doanh số dự kiến

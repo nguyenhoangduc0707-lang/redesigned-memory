@@ -1,0 +1,65 @@
+﻿{% extends "base.html" %}
+{% block title %}Chat TTS{% endblock %}
+{% block content %}
+<h2>Chat với AI_OS (Text-to-Speech)</h2>
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body">
+                <div id="chatBox" style="height: 400px; overflow-y: auto; border: 1px solid #ddd; padding: 10px; background: #f8f9fa;"></div>
+                <div class="mt-3 input-group">
+                    <input type="text" id="messageInput" class="form-control" placeholder="Nhập tin nhắn...">
+                    <button class="btn btn-primary" onclick="sendMessage()">Gửi</button>
+                </div>
+                <audio id="audioPlayer" controls style="display:none; margin-top: 10px; width: 100%;"></audio>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">Gợi ý lệnh</div>
+            <div class="card-body">
+                <ul>
+                    <li><strong>chạy pipeline</strong> - Thực thi pipeline</li>
+                    <li><strong>thống kê</strong> - Xem số campaign</li>
+                    <li><strong>xin chào</strong> - Trả lời thông thường</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function addMessage(text, isUser) {
+        const box = document.getElementById('chatBox');
+        const div = document.createElement('div');
+        div.className = `alert ${isUser ? 'alert-primary text-end' : 'alert-secondary'}`;
+        div.innerHTML = `<strong>${isUser ? 'Bạn' : 'AI'}:</strong> ${text}`;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+
+    async function sendMessage() {
+        const msg = document.getElementById('messageInput').value.trim();
+        if (!msg) return;
+        addMessage(msg, true);
+        document.getElementById('messageInput').value = '';
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({message: msg})
+        });
+        const data = await res.json();
+        addMessage(data.text, false);
+        if (data.audio_file) {
+            const audio = document.getElementById('audioPlayer');
+            audio.src = '/' + data.audio_file;
+            audio.style.display = 'block';
+            audio.play();
+        }
+    }
+
+    document.getElementById('messageInput').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') sendMessage();
+    });
+</script>
+{% endblock %}

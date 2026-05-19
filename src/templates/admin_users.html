@@ -1,0 +1,53 @@
+﻿{% extends "base.html" %}
+{% block title %}Quản lý user{% endblock %}
+{% block content %}
+<h2>Quản lý người dùng</h2>
+<div class="card mb-4">
+    <div class="card-header">Thêm user mới</div>
+    <div class="card-body">
+        <form id="addUserForm">
+            <div class="row">
+                <div class="col-md-4"><input type="text" id="username" class="form-control" placeholder="Username" required></div>
+                <div class="col-md-4"><input type="password" id="password" class="form-control" placeholder="Password" required></div>
+                <div class="col-md-2">
+                    <select id="role" class="form-control">
+                        <option value="user">User</option>
+                        <option value="manager">Manager</option>
+                        <option value="admin">Admin</option>
+                    </select>
+                </div>
+                <div class="col-md-2"><button type="submit" class="btn btn-primary w-100">Thêm</button></div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="card">
+    <div class="card-header">Danh sách user</div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead><tr><th>ID</th><th>Username</th><th>Role</th><th>Created at</th></tr></thead>
+            <tbody>
+                {% for u in users %}
+                <tr><td>{{ u[0] }}</td><td>{{ u[1] }}</td><td>{{ u[2] }}</td><td>{{ u[3] }}</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+document.getElementById('addUserForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+    const role = document.getElementById('role').value;
+    const res = await fetch('/admin/add_user', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({username, password, role})
+    });
+    const data = await res.json();
+    if (data.success) location.reload();
+    else alert('Lỗi: ' + data.error);
+});
+</script>
+{% endblock %}

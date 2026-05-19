@@ -1,0 +1,253 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI_OS_KERNEL_V3 - Unified Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { background: #f0f2f5; }
+        .sidebar { min-height: 100vh; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); color: white; }
+        .sidebar a { color: #ddd; text-decoration: none; display: block; padding: 12px 20px; transition: 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #0f3460; color: white; border-radius: 8px; margin: 4px 10px; }
+        .sidebar i { width: 25px; margin-right: 10px; }
+        .main-content { padding: 20px; }
+        .card { border-radius: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        .card-header { background: white; border-bottom: none; font-weight: bold; padding: 15px 20px; }
+        .table-responsive { padding: 0 15px 15px 15px; }
+        .btn-sm { border-radius: 20px; }
+        .chat-box { height: 300px; overflow-y: auto; border: 1px solid #ddd; border-radius: 10px; padding: 10px; background: #f9f9f9; }
+        .chat-message { margin-bottom: 10px; padding: 8px 12px; border-radius: 18px; max-width: 80%; }
+        .user-message { background: #007bff; color: white; align-self: flex-end; margin-left: auto; }
+        .bot-message { background: #e9ecef; color: black; }
+        #audio-playback { margin-top: 10px; display: none; }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-2 p-0 sidebar">
+            <div class="p-3 text-center border-bottom">
+                <h4><i class="fas fa-microchip"></i> AI_OS V3</h4>
+                <small>Xin chào, {{ current_user.username }} ({{ current_user.role }})</small>
+            </div>
+            <nav class="mt-3">
+                <a href="#" class="nav-link active" data-page="dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+                <a href="#" class="nav-link" data-page="campaigns"><i class="fas fa-bullhorn"></i> Campaigns</a>
+                <a href="#" class="nav-link" data-page="pipeline"><i class="fas fa-code-branch"></i> Pipeline</a>
+                <a href="#" class="nav-link" data-page="media"><i class="fas fa-video"></i> Video/Audio</a>
+                <a href="#" class="nav-link" data-page="chat"><i class="fas fa-comments"></i> Chat AI</a>
+                {% if current_user.role == 'admin' %}
+                <a href="#" class="nav-link" data-page="users"><i class="fas fa-users"></i> Quản lý User</a>
+                <a href="#" class="nav-link" data-page="tokens"><i class="fas fa-key"></i> Platform Tokens</a>
+                {% endif %}
+                <a href="/license" class="nav-link"><i class="fas fa-file-alt"></i> License</a>
+                <a href="/logout" class="nav-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
+            </nav>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-10 main-content">
+            <!-- Dashboard Page -->
+            <div id="page-dashboard">
+                <div class="row">
+                    <div class="col-md-4"><div class="card text-center"><div class="card-body"><h5 class="card-title">Tổng Campaign</h5><h2 id="total-campaigns">0</h2></div></div></div>
+                    <div class="col-md-4"><div class="card text-center"><div class="card-body"><h5 class="card-title">Bài đã đăng</h5><h2 id="total-posts">0</h2></div></div></div>
+                    <div class="col-md-4"><div class="card text-center"><div class="card-body"><h5 class="card-title">Doanh thu (VND)</h5><h2 id="total-revenue">0</h2></div></div></div>
+                </div>
+                <div class="card mt-3"><div class="card-header"><i class="fas fa-chart-line"></i> Thống kê</div><div class="card-body"><canvas id="statsChart" width="400" height="200"></canvas></div></div>
+                <div class="card mt-3"><div class="card-header"><i class="fas fa-history"></i> Pipeline Logs gần đây</div><div class="card-body"><ul id="recent-logs-list" class="list-group"></ul></div></div>
+            </div>
+
+            <!-- Campaigns Page -->
+            <div id="page-campaigns" style="display:none;">
+                <div class="card"><div class="card-header"><i class="fas fa-plus-circle"></i> Tạo Campaign mới</div><div class="card-body"><form id="new-campaign-form"><div class="row"><div class="col"><input type="text" class="form-control" name="name" placeholder="Tên chiến dịch" required></div><div class="col"><select name="platform" class="form-select"><option value="facebook">Facebook</option><option value="tiktok">TikTok</option><option value="zalo">Zalo</option><option value="shopee">Shopee</option></select></div><div class="col"><button type="submit" class="btn btn-primary">Tạo</button></div></div></form></div></div>
+                <div class="card mt-3"><div class="card-header"><i class="fas fa-list"></i> Danh sách Campaigns</div><div class="table-responsive"><table class="table table-hover"><thead><tr><th>ID</th><th>Tên</th><th>Platform</th><th>Status</th><th>Ngày tạo</th><th>Hành động</th></tr></thead><tbody id="campaigns-table-body"></tbody></table></div></div>
+            </div>
+
+            <!-- Pipeline Page -->
+            <div id="page-pipeline" style="display:none;">
+                <div class="card"><div class="card-header"><i class="fas fa-stream"></i> Pipeline Logs (realtime)</div><div class="card-body"><ul id="pipeline-logs-full" class="list-group" style="max-height:500px;overflow-y:auto;"></ul></div></div>
+            </div>
+
+            <!-- Media Page -->
+            <div id="page-media" style="display:none;">
+                <div class="card"><div class="card-header"><i class="fas fa-microphone-alt"></i> Xử lý Video/Audio</div><div class="card-body">
+                    <form id="media-form"><div class="mb-3"><label>URL video hoặc tải file lên</label><input type="text" class="form-control" name="video_url" placeholder="https://..."><input type="file" class="form-control mt-2" name="file" accept="video/*,audio/*"></div><div class="mb-3"><label>Ngôn ngữ</label><select name="language" class="form-select"><option value="vi">Tiếng Việt</option><option value="en">English</option></select></div><button type="submit" class="btn btn-primary">Xử lý</button></form>
+                    <div id="media-result" class="mt-3" style="display:none;"><hr><pre id="media-output"></pre></div>
+                </div></div>
+            </div>
+
+            <!-- Chat Page -->
+            <div id="page-chat" style="display:none;">
+                <div class="card"><div class="card-header"><i class="fas fa-robot"></i> AI Assistant (TTS)</div><div class="card-body">
+                    <div class="chat-box" id="chat-box"></div>
+                    <div class="input-group mt-3"><input type="text" id="chat-input" class="form-control" placeholder="Nhập câu hỏi..."><button class="btn btn-primary" id="chat-send">Gửi</button><button class="btn btn-secondary" id="chat-speak"><i class="fas fa-microphone"></i> Nói</button></div>
+                    <audio id="audio-playback" controls style="width:100%; margin-top:10px;"></audio>
+                </div></div>
+            </div>
+
+            <!-- Admin Users -->
+            <div id="page-users" style="display:none;">
+                <div class="card"><div class="card-header"><i class="fas fa-user-plus"></i> Thêm user mới</div><div class="card-body"><form id="add-user-form"><div class="row"><div class="col"><input type="text" class="form-control" name="username" placeholder="Username" required></div><div class="col"><input type="password" class="form-control" name="password" placeholder="Password" required></div><div class="col"><select name="role" class="form-select"><option value="user">User</option><option value="manager">Manager</option><option value="admin">Admin</option></select></div><div class="col"><button type="submit" class="btn btn-success">Thêm</button></div></div></form></div></div>
+                <div class="card mt-3"><div class="card-header"><i class="fas fa-users"></i> Danh sách người dùng</div><div class="table-responsive"><table class="table"><thead><tr><th>ID</th><th>Tên</th><th>Role</th><th>Ngày tạo</th></tr></thead><tbody id="users-list"></tbody></table></div></div>
+            </div>
+
+            <!-- Admin Tokens -->
+            <div id="page-tokens" style="display:none;">
+                <div class="card"><div class="card-header"><i class="fas fa-key"></i> Cập nhật token nền tảng</div><div class="card-body"><div id="tokens-list"></div></div></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Helper: fetch with JSON
+    async function apiFetch(url, options={}) {
+        const res = await fetch(url, options);
+        if(!res.ok) throw new Error(await res.text());
+        return res.json();
+    }
+
+    // Load Dashboard stats (mock, nếu có API thật thì thay)
+    async function loadDashboardStats() {
+        // Gọi API /api/stats nếu có, tạm thời dùng số liệu từ campaigns và posts
+        const campaignsRes = await fetch('/api/campaigns');
+        const campaigns = await campaignsRes.json();
+        document.getElementById('total-campaigns').innerText = campaigns.length;
+        // Lấy thêm posts count (cần thêm API /api/posts_count)
+        document.getElementById('total-revenue').innerText = '0';
+        document.getElementById('total-posts').innerText = '0';
+        // Chart mẫu
+        const ctx = document.getElementById('statsChart').getContext('2d');
+        new Chart(ctx, { type: 'line', data: { labels: ['T1','T2','T3','T4'], datasets: [{ label: 'Doanh thu', data: [5,10,8,15] }] } });
+        // Load recent logs
+        const logs = await apiFetch('/api/pipeline_logs');
+        const recentList = document.getElementById('recent-logs-list');
+        recentList.innerHTML = logs.slice(0,5).map(l => `<li class="list-group-item">[${l.created_at}] ${l.worker_name}: ${l.message}</li>`).join('');
+    }
+
+    // Campaigns
+    async function loadCampaigns() {
+        const campaigns = await apiFetch('/api/campaigns');
+        const tbody = document.getElementById('campaigns-table-body');
+        tbody.innerHTML = campaigns.map(c => `<tr>
+            <td>${c.id}</td><td>${c.name}</td><td>${c.platform}</td><td>${c.status}</td><td>${c.created_at}</td>
+            <td><button class="btn btn-sm btn-outline-primary run-worker" data-id="${c.id}" data-worker="${c.platform}">Chạy</button></td>
+        </tr>`).join('');
+        document.querySelectorAll('.run-worker').forEach(btn => btn.addEventListener('click', async (e) => {
+            const id = btn.dataset.id, worker = btn.dataset.worker;
+            const res = await apiFetch('/api/run_worker', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({campaign_id:id, worker_name:worker}) });
+            alert(res.message);
+            loadPipelineLogs();
+        }));
+    }
+
+    // Pipeline logs
+    async function loadPipelineLogs() {
+        const logs = await apiFetch('/api/pipeline_logs');
+        const container = document.getElementById('pipeline-logs-full');
+        if(container) container.innerHTML = logs.map(l => `<li class="list-group-item">[${l.created_at}] <strong>${l.worker_name}</strong> - ${l.message} (${l.status})</li>`).join('');
+        // refresh dashboard logs
+        const recentList = document.getElementById('recent-logs-list');
+        if(recentList) recentList.innerHTML = logs.slice(0,5).map(l => `<li class="list-group-item">[${l.created_at}] ${l.worker_name}: ${l.message}</li>`).join('');
+    }
+
+    // New campaign form
+    document.getElementById('new-campaign-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const res = await fetch('/new_campaign', { method:'POST', body:formData });
+        if(res.redirected) window.location.href = res.url;
+        else alert('Created');
+        loadCampaigns();
+    });
+
+    // Media processing
+    document.getElementById('media-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const res = await fetch('/api/process_video', { method:'POST', body:formData });
+        const data = await res.json();
+        document.getElementById('media-output').innerText = JSON.stringify(data, null, 2);
+        document.getElementById('media-result').style.display = 'block';
+    });
+
+    // Chat
+    const chatBox = document.getElementById('chat-box');
+    const chatInput = document.getElementById('chat-input');
+    const chatSend = document.getElementById('chat-send');
+    const audioPlay = document.getElementById('audio-playback');
+
+    async function sendChatMessage(msg) {
+        chatBox.innerHTML += `<div class="chat-message user-message">${msg}</div>`;
+        const res = await fetch('/api/chat', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({message:msg}) });
+        const data = await res.json();
+        chatBox.innerHTML += `<div class="chat-message bot-message">${data.text}</div>`;
+        chatBox.scrollTop = chatBox.scrollHeight;
+        if(data.audio_file) {
+            audioPlay.src = data.audio_file;
+            audioPlay.style.display = 'block';
+            audioPlay.play();
+        }
+    }
+    chatSend?.addEventListener('click', () => { if(chatInput.value) sendChatMessage(chatInput.value); chatInput.value=''; });
+    document.getElementById('chat-speak')?.addEventListener('click', () => {
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        recognition.lang = 'vi-VN';
+        recognition.onresult = (e) => sendChatMessage(e.results[0][0].transcript);
+        recognition.start();
+    });
+
+    // Admin users
+    async function loadUsers() {
+        const res = await fetch('/admin/users');
+        const html = await res.text(); // Flask trả về template, nhưng để lấy json cần API riêng
+        // Thay vào đó gọi API /api/users nếu có, tạm thời dùng fetch /admin/users?format=json
+        const users = await fetch('/admin/users?format=json').then(r=>r.json()).catch(()=>[]);
+        const tbody = document.getElementById('users-list');
+        if(tbody) tbody.innerHTML = users.map(u => `<tr><td>${u.id}</td><td>${u.username}</td><td>${u.role}</td><td>${u.created_at}</td></tr>`).join('');
+    }
+    document.getElementById('add-user-form')?.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const data = Object.fromEntries(formData);
+        await apiFetch('/admin/add_user', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data) });
+        loadUsers();
+    });
+
+    // Admin tokens
+    async function loadTokens() {
+        const res = await fetch('/admin/tokens');
+        const html = await res.text();
+        document.getElementById('tokens-list').innerHTML = html;
+    }
+
+    // Sidebar navigation
+    const pages = ['dashboard','campaigns','pipeline','media','chat','users','tokens'];
+    document.querySelectorAll('.nav-link[data-page]').forEach(link => {
+        link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const page = link.dataset.page;
+            pages.forEach(p => {
+                const el = document.getElementById(`page-${p}`);
+                if(el) el.style.display = p === page ? 'block' : 'none';
+            });
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+            if(page === 'dashboard') loadDashboardStats();
+            if(page === 'campaigns') loadCampaigns();
+            if(page === 'pipeline') loadPipelineLogs();
+            if(page === 'users') loadUsers();
+            if(page === 'tokens') loadTokens();
+        });
+    });
+    // Initial load
+    loadDashboardStats();
+    setInterval(loadPipelineLogs, 15000);
+</script>
+</body>
+</html>

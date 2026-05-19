@@ -1,8 +1,7 @@
 ﻿import unittest
-import sys
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from database import get_db_connection  # giả sử bạn có hàm này
+
+from src.database import get_db_connection
+
 
 class TestDatabase(unittest.TestCase):
     def test_connection(self):
@@ -10,5 +9,6 @@ class TestDatabase(unittest.TestCase):
         self.assertIsNotNone(conn)
         conn.close()
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

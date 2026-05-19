@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Giấy khai sinh Hệ thống AI_OS_KERNEL_V3</h2>
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Thông tin công khai</h5>
+            <p><strong>Tên hệ thống:</strong> AI_OS_KERNEL_V3</p>
+            <p><strong>Nhà sáng lập:</strong> Đồng sáng lập dự án SEN</p>
+            <p><strong>Mô tả:</strong> Nhân hệ điều hành AI mô-đun cho tự động hóa Affiliate</p>
+            <hr>
+            <h5>Thông tin chi tiết (yêu cầu xác thực)</h5>
+            <p>Để xem thông tin cá nhân của nhà sáng lập, vui lòng nhập mã CCCD hợp lệ:</p>
+            <div class="input-group mb-3">
+                <input type="text" id="cccdInput" class="form-control" placeholder="Nhập số CCCD">
+                <button class="btn btn-primary" id="verifyBtn">Xác thực</button>
+            </div>
+            <div id="sensitiveInfo" style="display:none;" class="alert alert-info"></div>
+            <div id="errorMsg" style="display:none;" class="alert alert-danger"></div>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById('verifyBtn').onclick = async () => {
+        const cccd = document.getElementById('cccdInput').value;
+        const res = await fetch('/verify_cccd', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({cccd: cccd})
+        });
+        const data = await res.json();
+        if (data.success) {
+            const info = data.info;
+            document.getElementById('sensitiveInfo').innerHTML = `
+                <strong>Họ tên:</strong> ${info.fullname}<br>
+                <strong>Ngày sinh:</strong> ${info.dob}<br>
+                <strong>Số điện thoại:</strong> ${info.phone}<br>
+                <strong>Vai trò:</strong> ${info.role}<br>
+                <strong>CCCD:</strong> ${info.cccd}
+            `;
+            document.getElementById('sensitiveInfo').style.display = 'block';
+            document.getElementById('errorMsg').style.display = 'none';
+        } else {
+            document.getElementById('errorMsg').innerText = data.error;
+            document.getElementById('errorMsg').style.display = 'block';
+            document.getElementById('sensitiveInfo').style.display = 'none';
+        }
+    };
+</script>
+{% endblock %}
