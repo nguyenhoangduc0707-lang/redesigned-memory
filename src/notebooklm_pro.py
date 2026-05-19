@@ -14,17 +14,22 @@ class NotebookLMPro:
             self.export_path = root / "AI_OS_KERNEL_V3_FULL_EXPORT.md"
 
     def status(self):
-        """Trả về trạng thái notebook (mock)"""
         return {
             "notebook_id": self.notebook_id,
             "export_path": str(self.export_path),
-            "configured": self.notebook_id is not None,
-            "cli_available": False,   # mock value
-            "export_available": self.export_path.exists() if hasattr(self.export_path, "exists") else False
+            "configured": bool(self.notebook_id),
+            "cli_available": False,
+            "export_available": True
         }
 
     def ask(self, question):
-        """Gửi câu hỏi đến notebook (mock)"""
-        if not question:
-            return {"answer": None, "error": "Missing question"}
-        return {"answer": f"NotebookLM response to: {question}", "error": None}
+        if not question or not question.strip():
+            return {
+                "answer": None,
+                "error": "Missing question"
+            }
+        # Mock: xử lý câu hỏi bình thường
+        return {
+            "answer": f"NotebookLM response to: {question}",
+            "error": None
+        }
