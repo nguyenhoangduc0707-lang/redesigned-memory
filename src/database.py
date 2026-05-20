@@ -1,17 +1,12 @@
+# -*- coding: utf-8 -*-
 import sqlite3
-
-from werkzeug.security import generate_password_hash
-
 from src.config import DB_PATH
-
 
 def get_db():
     return sqlite3.connect(DB_PATH)
 
-
 def get_db_connection():
     return get_db()
-
 
 def init_db():
     with get_db() as conn:
@@ -27,7 +22,6 @@ def init_db():
         conn.commit()
     print("Database ready")
 
-
 def save_post(product_id, platform, caption, link):
     with get_db() as conn:
         cur = conn.cursor()
@@ -37,15 +31,14 @@ def save_post(product_id, platform, caption, link):
         )
         conn.commit()
 
-
 def get_user_by_username(username):
     with get_db() as conn:
         cur = conn.cursor()
         cur.execute("SELECT id, username, password_hash, role FROM users WHERE username=?", (username,))
         return cur.fetchone()
 
-
 def add_user(username, password, role="user"):
+    from werkzeug.security import generate_password_hash
     with get_db() as conn:
         cur = conn.cursor()
         hash_pw = generate_password_hash(password)

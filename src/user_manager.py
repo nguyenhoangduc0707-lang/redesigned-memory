@@ -39,7 +39,7 @@ def authenticate_user(username, password):
         cur = conn.cursor()
         cur.execute("SELECT id, username, password_hash, role FROM users WHERE username=?", (username,))
         row = cur.fetchone()
-        if row and row[2] == password:   # So sánh plain text
+        if row and check_password_hash(row[2], password):
             return User(row[0], row[1], row[3])
     return None
 
