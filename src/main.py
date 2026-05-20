@@ -472,4 +472,5 @@ if __name__ == '__main__':
         run_all_agents()
         generate_content_for_all()
     else:
-        app.run(debug=True, host='0.0.0.0', port=5000)
+        debug_mode = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+        app.run(debug=debug_mode, host='0.0.0.0' if debug_mode else '127.0.0.1', port=5000)
