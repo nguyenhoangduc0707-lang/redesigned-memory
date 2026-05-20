@@ -1,0 +1,23 @@
+{
+  "summary": "Tác phẩm này phân tích về những người dễ dung độ, luôn tìm kiếm tình yêu và sự phù hợp để dập nổi lòng bần bách, nhưng họ thiếu thốn tình cảm và khảng định, vội vàng tìm kiếm sự lấp đầy tạm bợ. Trong khi đó, tác giả cho rằng, tình yêu đích thực là sự tận hiến, thể hiện sự tự chọng. Họ chọn cô đơn trong vinh quan để tránh những giá trị dắc dưới ấy.",
+  "key_points": [
+    "tình yêu đích thực là sự tận hiến",
+    "những người dễ dung độ thiếu thốn tình cảm",
+    "cô đơn trong vinh quan là lựa chọn tốt hơn"
+  ],
+  "entities": {
+    "person": [],
+    "org": [],
+    "concept": [
+      "tình yêu",
+      "vị ngọt",
+      "cô đơn",
+      "sáng tạo",
+      "self-actualization"
+    ]
+  },
+  "topics": [
+    "sự thiếu thốn tình cảm",
+    "tình yêu đích thực"
+  ]
+}

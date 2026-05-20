@@ -1,8 +1,10 @@
-# src/config.py
-AI_IDENTITY = "SEN AI - Trợ lý thông minh của bạn"
-FOUNDER_INFO = "Được phát triển bởi SEN Team"
-DEDICATION = "Dự án AI_OS_KERNEL_V3"
+from pathlib import Path
+
+AI_IDENTITY = "SEN"
+FOUNDER_INFO = "Nguyễn Hoàng Đức (07/07/1997)"
+DEDICATION = "Trợ lý AI của Sếp Đức"
 DB_PATH = "ai_os.db"
 
-# Các cấu hình khác nếu cần
+ROOT_DIR = Path(__file__).parent.parent
+
 OLLAMA_MODEL = "gemma2:2b"

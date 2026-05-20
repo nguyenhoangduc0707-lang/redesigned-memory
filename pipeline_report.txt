@@ -1,0 +1,7 @@
+BÁO CÁO TỰ ĐỘNG HÓA
+Thời gian: 05/20/2026 22:37:36
+Chiến dịch: SEN_Campaign
+Text: Sản phẩm mới - giảm giá 20%
+Đã tạo ảnh: True
+Đã tạo video: True
+Đã đăng social: True

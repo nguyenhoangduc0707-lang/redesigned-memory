@@ -21,19 +21,25 @@ else:
 # 2. Tìm các file Python sử dụng thư viện cũ
 print("\n=== CÁC FILE DÙNG THƯ VIỆN DEPRECATED ===")
 for root, dirs, files in os.walk("."):
+    # Bỏ qua các thư mục không cần thiết
+    dirs[:] = [d for d in dirs if d not in ["venv_ci_test", "venv_aios", "__pycache__", "node_modules", ".git"]]
     for file in files:
         if file.endswith(".py"):
             path = os.path.join(root, file)
-            with open(path, "r", encoding="utf-8", errors="ignore") as f:
-                content = f.read()
-                if "google.generativeai" in content:
-                    print(f" - {path} (dùng generativeai cũ)")
+            try:
+                with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                    content = f.read()
+                    if "google.generativeai" in content:
+                        print(f" - {path} (dùng generativeai cũ)")
+            except Exception as e:
+                print(f" - {path}: không thể đọc file ({e})")
 
 # 3. Tìm các file rác phổ biến
 print("\n=== FILE RÁC TIỀM NĂNG ===")
 trash_extensions = [".pyc", ".log", ".tmp", ".bak", ".swp"]
 for ext in trash_extensions:
     for root, dirs, files in os.walk("."):
+        dirs[:] = [d for d in dirs if d not in ["venv_ci_test", "venv_aios", "__pycache__", "node_modules"]]
         for file in files:
             if file.endswith(ext):
                 print(f" - {os.path.join(root, file)}")
