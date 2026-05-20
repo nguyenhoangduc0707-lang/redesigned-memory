@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 import sys, os, tempfile, secrets, uuid
 from datetime import date
 from flask import Flask, render_template, request, redirect, url_for, session, flash, jsonify

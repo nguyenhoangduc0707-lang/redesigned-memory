@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@srbhptl39/mcp-superassistant-proxy": "^0.1.8"
+  }
+}

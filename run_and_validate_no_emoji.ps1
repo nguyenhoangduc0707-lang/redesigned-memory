@@ -1,3 +1,7 @@
+﻿# PowerShell UTF-8 setup
+[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
+$OutputEncoding = [System.Text.Encoding]::UTF8
+chcp 65001 > $null
 $ErrorActionPreference = "Stop"
 
 Write-Host "=== RUNNING PIPELINE ===" -ForegroundColor Cyan
